@@ -17,7 +17,7 @@ def weight_init(num_inputs):
 	"""
 	### Insira seu cadigo aqui (2 linhas)
 	w = None
-	b = None
+	b = 0
 	return w,b
 
 
@@ -31,9 +31,9 @@ def activation_func(func_type, z):
 	"""
 	### Seu codigo aqui (2 linhas)
 	if func_type == 'sigmoid':
-		return 1/(1 + exp(z*(-1)))
+		return 1/(1 + np.exp(z*(-1)))
 	elif func_type == 'tanh':
-		return (2/(1 + exp(z*(-2))))-1
+		return (2/(1 + np.exp(z*(-2))))-1
 	elif func_type == 'relu':
 		if z<0:
 			return 0
@@ -55,7 +55,7 @@ def visualizeActivationFunc(z):
 	plt.show()
 
 
-if __name__ = "__main__":
+if __name__ == "__main__":
 	print("ola")
 	z = np.arange(-5., 5., 0.2)
 	print(z)
