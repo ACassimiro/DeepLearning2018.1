@@ -31,13 +31,17 @@ def activation_func(func_type, z):
 	"""
 	### Seu codigo aqui (2 linhas)
 	if func_type == 'sigmoid':
-		return None
+		return 1/(1 + exp(z*(-1)))
 	elif func_type == 'tanh':
-		return None
+		return (2/(1 + exp(z*(-2))))-1
 	elif func_type == 'relu':
-		return None
+		if z<0:
+			return 0
+		return z
 	elif func_type == 'degrau':
-		return None
+		if z>0:
+			return 1;
+		return 0
 
 #VISUALIZACAO DA FUNCAO DE ATIVACAO
 def visualizeActivationFunc(z):
@@ -51,7 +55,8 @@ def visualizeActivationFunc(z):
 	plt.show()
 
 
-print("ola")
-
-z = np.arange(-5., 5., 0.2)
-visualizeActivationFunc(z)
+if __name__ = "__main__":
+	print("ola")
+	z = np.arange(-5., 5., 0.2)
+	print(z)
+	visualizeActivationFunc(z)
