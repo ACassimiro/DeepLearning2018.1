@@ -10,6 +10,7 @@ from sklearn.metrics import accuracy_score
 
 """
 	PESOS E BIAS QUE FUNCIONARAM:
+		#SIGMOID
 		Array de pesos: 
 		[0.20506415855171234, 0.43438788264418093]
 		bias: -0.5
@@ -25,6 +26,12 @@ from sklearn.metrics import accuracy_score
 		Array de pesos: 
 		[0.2527685044456509, 0.08500280335193366]
 		bias: -0.3
+
+		#RELU
+		Array de pesos: 
+		[0.3705497329614913, 0.24110300672835994]
+		bias: 0
+
 
 """
 
@@ -101,6 +108,7 @@ def forward(w, b, X):
 
 #FUNCAO DE PREDICAO
 def predict(out):
+	#print (out)
 	if (out>0.5):
 		return 1
 	return 0
@@ -149,6 +157,9 @@ def perceptron(x, y, num_iteration, learning_rate):
 	            learning_rate - taxa de aprendizado para calculo do erro 
 	"""
 	
+	#TODO: DESCOBRIR VALOR DO RÓTULO
+
+
 	#Passo 1 - Inicie os pesos e bias (1 linha)
 	w, b = weight_init(2)
 	taxa_aprendizado = 0.2
