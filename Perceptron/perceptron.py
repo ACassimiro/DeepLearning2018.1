@@ -105,17 +105,8 @@ def predict(out):
 		return 1
 	return 0
 
-
-#FUNCAO MAIN
-if __name__ == "__main__":
-	print("")
-	#z = np.arange(-5., 5., 0.2)
-	#visualizeActivationFunc(w)
-	X = [[0, 0],
-	     [1, 0],
-	     [0, 1],
-	     [1, 1]]
-
+#FUNCAO DE BUSCA DE PESOS ALEATORIOS EMPIRICAMENTE
+def empyric(X):
 	w, b = weight_init(2);
 
 	print()
@@ -146,6 +137,55 @@ if __name__ == "__main__":
 
 		if auxEmpirico == 4:
 			break;
+
+
+#FUNCAO DE TREINO E AVALIACAO
+def perceptron(x, y, num_iteration, learning_rate):
+	"""
+	Funcao que implementa o loop do treinamento
+	Parametros: x - entrada da rede
+	            y - rotulos/labels
+	            num_iteration - quantidade de iteracoes desejadas para a rede convergir
+	            learning_rate - taxa de aprendizado para calculo do erro 
+	"""
+	
+	#Passo 1 - Inicie os pesos e bias (1 linha)
+	w, b = weight_init(2)
+	taxa_aprendizado = 0.2
+
+	#Passo 2 - Loop por X interacoes
+	for j in range(None):
+		#Passo 3 - calcule a saida do neuronio (1 linha)
+		y_pred = None
+		#Passo 4 - calcule o erro entre a saida obtida e a saida desejada nos rotulos/labels (1 linha)
+		erro = None
+		#Passo 5 - atualize o valor dos pesos (1 linha)
+		#Dica: voce pode utilizar a funcao np.dot e a funcao transpose de numpy
+		w = None
+
+	#Verifique as saidas
+	print('Saida obtida: ', y_pred)
+	print('Pesos obtidos: ', w)
+
+	#Metricas de Avaliacao
+	y_pred = predict(y_pred)
+	print('Matriz de confusao:')
+	print(confusion_matrix(y, y_pred))
+	print('F1 Score:')
+	print(classification_report(y, y_pred))
+
+
+#FUNCAO MAIN
+if __name__ == "__main__":
+	X = [[0, 0],
+	     [1, 0],
+	     [0, 1],
+	     [1, 1]]
+	Y = [0, 0, 0, 1]
+
+	empyric(X)
+
+
 
 
 
