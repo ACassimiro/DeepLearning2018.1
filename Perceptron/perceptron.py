@@ -2,6 +2,7 @@
 
 import numpy as np
 import matplotlib.pyplot as plt
+import random
 from scipy.interpolate import spline
 from sklearn.metrics import classification_report
 from sklearn.metrics import confusion_matrix
@@ -16,8 +17,16 @@ def weight_init(num_inputs):
 	Retorna: w,b - pesos e bias da rede inicializados
 	"""
 	### Insira seu cadigo aqui (2 linhas)
-	w = None
+
+	count = 0
+	w = []
+	while (count <= num_inputs):
+		w.append(random.uniform(-1, 1))
+		count++
 	b = 0
+
+	print("Array de pesos: " + w + " | bias: " + b)
+
 	return w,b
 
 
@@ -57,6 +66,7 @@ def visualizeActivationFunc(z):
 
 if __name__ == "__main__":
 	print("ola")
-	z = np.arange(-5., 5., 0.2)
-	print(z)
-	visualizeActivationFunc(z)
+	#z = np.arange(-5., 5., 0.2)
+	#print(z)
+	w, b = weight_init(2);
+	visualizeActivationFunc(w)
