@@ -103,7 +103,7 @@ def forward(w, b, X):
 	            X - entradas
 	"""
 	z = np.dot(w, X) + b
-	out = activation_func("sigmoid", z)
+	out = activation_func("degrau", z)
 	return out
 
 #FUNCAO DE PREDICAO
@@ -162,17 +162,16 @@ def perceptron(x, y, num_iteration, learning_rate):
 
 	#Passo 1 - Inicie os pesos e bias (1 linha)
 	w, b = weight_init(2)
-	taxa_aprendizado = 0.2
 
 	#Passo 2 - Loop por X interacoes
-	for j in range(None):
+	for j in range(num_iteration):
 		#Passo 3 - calcule a saida do neuronio (1 linha)
-		y_pred = None
+		y_pred = forward(w, b, x[j%4])
 		#Passo 4 - calcule o erro entre a saida obtida e a saida desejada nos rotulos/labels (1 linha)
-		erro = None
+		erro = y[j%4] - y_pred
 		#Passo 5 - atualize o valor dos pesos (1 linha)
 		#Dica: voce pode utilizar a funcao np.dot e a funcao transpose de numpy
-		w = None
+		w = np.add(w, np.dot(erro*learning_rate, x[j%4]))
 
 	#Verifique as saidas
 	print('Saida obtida: ', y_pred)
@@ -194,7 +193,8 @@ if __name__ == "__main__":
 	     [1, 1]]
 	Y = [0, 0, 0, 1]
 
-	empyric(X)
+	perceptron(X, Y, 10, 0.2)
+	#empyric(X)
 
 
 
