@@ -1,4 +1,4 @@
-
+from exercicio1 import Perceptron
 
 def parseInput(inputFile, nodeNum, X, Y):
 	#arquivo de input
@@ -28,9 +28,11 @@ if __name__ == "__main__":
 		inputFile = "Noise " + str(i) + ".txt"
 		parseInput(inputFile, nodeNum, X, Y)
 
-		
+	neuron = Perceptron(3, 0, "degrau")
 
-	print("") 
-	print(X) 
-	print("") 
-	print(Y) 
+	neuron.perc_training(X, Y, 10000, 0.25)
+
+	#print("") 
+	#print(X) 
+	#print("") 
+	#print(Y) 
