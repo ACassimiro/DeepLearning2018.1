@@ -117,8 +117,6 @@ if __name__ == "__main__":
 	
 	neuron = Perceptron(3, 0, "degrau")
 
-	#print(neuron.b)
-
 	X = [[0, 0, 0],
 	     [0, 0, 1],
 	     [0, 1, 0],
@@ -127,13 +125,3 @@ if __name__ == "__main__":
 	Y = [0, 0, 0, 1, 1]
 
 	neuron.perc_training(X, Y, 10000, 0.25)
-
-	#empyric(X)
-
-
-
-
-
-    
-
-	

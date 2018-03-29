@@ -10,8 +10,8 @@ def parseInput(inputFile, nodeNum, X, Y):
 	for line in lines:
 		auxArray = line.split()
 
-		X.append([auxArray[0], auxArray[1], auxArray[2]])
-		Y.append(auxArray[3+nodeNum])
+		X.append([float(auxArray[0]), float(auxArray[1]), float(auxArray[2])])
+		Y.append(int(auxArray[3+nodeNum]))
 
 	f1.close()
 
@@ -30,7 +30,9 @@ if __name__ == "__main__":
 
 	neuron = Perceptron(3, 0, "degrau")
 
-	neuron.perc_training(X, Y, 10000, 0.25)
+	neuron.perc_training(X, Y, 1000, 0.05)
+
+	print ("Prediction: " + str(neuron.forward([-0.05, 0.01, 0.03])))
 
 	#print("") 
 	#print(X) 
