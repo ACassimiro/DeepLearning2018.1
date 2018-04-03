@@ -28,11 +28,22 @@ if __name__ == "__main__":
 		inputFile = "Noise " + str(i) + ".txt"
 		parseInput(inputFile, nodeNum, X, Y)
 
+	#inputFile = "Noise " + "5" + ".txt"
+	#parseInput(inputFile, nodeNum, X, Y)
+
 	neuron = Perceptron(3, 0, "degrau")
 
-	neuron.perc_training(X, Y, 1000, 0.05)
+	neuron.perc_training(X, Y, 10000, 0.1)
 
-	print ("Prediction: " + str(neuron.forward([-0.05, 0.01, 0.03])))
+
+	print ("Prediction: " + str(neuron.forward([-0.05, 0.01, 0.03]))) #0 0 0 
+	print ("Prediction: " + str(neuron.forward([-0.05, 0.01, 1.03]))) #0 0 1
+	print ("Prediction: " + str(neuron.forward([-0.05, 1.01, 0.03]))) #0 1 0
+	print ("Prediction: " + str(neuron.forward([1.05, 0.01, 0.03])))  #1 0 0 
+	print ("Prediction: " + str(neuron.forward([0.05, 1.01, 1.03])))  #0 1 1
+	print ("Prediction: " + str(neuron.forward([1.05, 1.01, 0.03])))  #1 1 0
+	print ("Prediction: " + str(neuron.forward([1.05, 0.01, 1.03])))  #1 0 1
+	print ("Prediction: " + str(neuron.forward([1.05, 1.01, 1.03])))  #1 1 1
 
 	#print("") 
 	#print(X) 

@@ -8,7 +8,7 @@ for line in f:
 
 	f2 = open("Noise " + str(i+1)+".txt", "w")
 
-	for j in range(15):
+	for j in range(50):
 		(a,b,c) = (float(x[0]), float(x[1]), float(x[2]))
 		a += random.uniform(-0.1, 0.1)
 		b += random.uniform(-0.1, 0.1)
