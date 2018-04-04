@@ -111,7 +111,6 @@ class Perceptron:
 			X, Y = self.input_output_scramble(X, Y)
 
 
-
 #FUNCAO MAIN
 if __name__ == "__main__":
 	
