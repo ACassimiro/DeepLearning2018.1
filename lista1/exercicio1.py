@@ -1,5 +1,6 @@
 #PERCEPTRON
 
+import copy
 import numpy as np
 import matplotlib.pyplot as plt
 import random
@@ -110,11 +111,32 @@ class Perceptron:
 				
 			X, Y = self.input_output_scramble(X, Y)
 
+class Layer:
+	def __init__(self, perceptron, num_perceptron):
+		self.num_perceptron = num_perceptron
+		self.perceptron = perceptron
+		self.layer = []
+
+	def start_layer(self):
+		for i in range(self.num_perceptron):
+			self.layer.append(copy.deepcopy(self.perceptron))
+
+	def out_Layer(self, x):
+		out = []
+		for i in range(self.num_perceptron):
+			out.append(self.layer[i].forward(x))
+
+		return out
+
+	def training_Layer(self, X, Y, num_iteration, learning_rate):
+		npY = np.array(Y)
+		for i in range(self.num_perceptron):
+			self.layer[i].perc_training(X, npY[:,i], num_iteration, learning_rate)
 
 #FUNCAO MAIN
 if __name__ == "__main__":
 	
-	neuron = Perceptron(3, 0, "degrau")
+	"""neuron = Perceptron(3, 0, "degrau")
 
 	X = [[0, 0, 0],
 	     [0, 0, 1],
@@ -124,3 +146,29 @@ if __name__ == "__main__":
 	Y = [0, 0, 0, 1, 1]
 
 	neuron.perc_training(X, Y, 10000, 0.25)
+"""
+
+	X = [[0, 0, 0],
+	     [0, 0, 1],
+	     [0, 1, 0],
+	     [1, 0, 0],
+	     [0, 1, 1],
+	     [1, 0, 1],
+	     [1, 1, 0],
+	     [1, 1, 1]]
+	Y = [[1,0,0,0,0,0,0,0], 
+		 [0,1,0,0,0,0,0,0], 
+		 [0,0,1,0,0,0,0,0], 
+		 [0,0,0,1,0,0,0,0],
+		 [0,0,0,0,1,0,0,0],
+		 [0,0,0,0,0,1,0,0],
+		 [0,0,0,0,0,0,1,0],
+		 [0,0,0,0,0,0,0,1]]
+
+	#Y = [[1],[0],[0],[0],[0],[0],[0],[0]]
+	neuron = Perceptron(3, 0, "degrau")
+	singleLayer = Layer(neuron, 8)
+	singleLayer.start_layer()
+	singleLayer.training_Layer(X, Y, 1000, 0.1)
+
+	print ("Prediction: " + str(singleLayer.out_Layer([1, 0, 0]))) #0,0,0,1,0,0,0,0]

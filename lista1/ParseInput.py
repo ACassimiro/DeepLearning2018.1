@@ -17,7 +17,7 @@ def parseInput(inputFile, nodeNum, X, Y):
 
 	return X, Y
 
-def testInput(inputFile):
+def parseTest(inputFile):
 	f1 = open(inputFile, "r")
 	lines = f1.readlines()
 	cnt = i = 0
@@ -56,11 +56,13 @@ if __name__ == "__main__":
 	#parseInput(inputFile, nodeNum, X, Y)
 
 	neuron = Perceptron(3, 0, "degrau")
+	#neuron.perc_training(X, Y, 1000, 0.1)
+	singleLayer = Layer(neuron, 8)
+	singleLayer.start_layer()
+	singleLayer.training_Layer(X, Y, 1000, 0.1)
 
-	neuron.perc_training(X, Y, 1000, 0.1)
 
-
-	testInput("TestFile.txt")
+	parseTest("TestFile.txt")
 	#print ("Prediction: " + str(neuron.forward([-0.05, 0.01, 0.03]))) #0 0 0 
 	#print ("Prediction: " + str(neuron.forward([-0.05, 0.01, 1.03]))) #0 0 1
 	#print ("Prediction: " + str(neuron.forward([-0.05, 1.01, 0.03]))) #0 1 0
