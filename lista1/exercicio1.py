@@ -100,8 +100,6 @@ class Perceptron:
 
 	def perc_training(self, X, Y, num_iteration, learning_rate):
 
-		#TODO: EXPLORAR FUNÇÃO NP DOT. PROCURAR ERRO
-
 		for i in range(num_iteration):
 			for j in range(len(X)):
 				#print("aqui")
@@ -133,6 +131,81 @@ class Layer:
 		for i in range(self.num_perceptron):
 			self.layer[i].perc_training(X, npY[:,i], num_iteration, learning_rate)
 
+
+	def input_output_scramble(self, X, Y):
+		
+		for i in range(len(X)):
+			X[i].append(Y[i])
+
+		np.random.shuffle(X)
+
+		for i in range(len(X)):
+			Y[i] = X[i][len(X[i]) - 1]
+			X[i].pop()
+
+		return X, Y 
+
+	def layer_training(self, X, Y, num_iteration, learning_rate):
+
+		for i in range(num_iteration):
+			for j in range(len(X)):
+				for innerCount in range(len(self.layer)):
+					y_pred = self.layer[innerCount].forward(X[j])
+					erro = Y[j][innerCount] - y_pred
+					self.layer[innerCount].w = np.add(self.layer[innerCount].w, np.dot(erro * learning_rate, X[j]))
+				
+			X, Y = self.input_output_scramble(X, Y)
+
+
+
+
+#FUNCAO DE PARSING DOS ARQUIVOS NOISE
+def parseInput(inputFile, X, Y):
+	#arquivo de input
+	f1=open(inputFile, "r")
+
+	#processamento das linhas
+	lines = f1.readlines()
+
+	for line in lines:
+		auxArray = line.split()
+
+		X.append([float(auxArray[0]), float(auxArray[1]), float(auxArray[2])])
+		Y.append([int(x) for x in auxArray[3:]])
+
+	f1.close()
+
+	return X, Y
+
+
+def parseTest(inputFile, layer):
+	f1 = open(inputFile, "r")
+	lines = f1.readlines()
+	cnt = i = 0
+	for line in lines:
+		i += 1
+		auxArray = line.split()
+		X = [float(auxArray[0]), float(auxArray[1]), float(auxArray[2])]
+		Y.append([int(x) for x in auxArray[3:]])
+
+		pred = layer.out_Layer(X)
+
+		print ("Prediction: ")
+		print(pred)
+		print("Output Expected: ") 
+		print(Y[i-1])
+
+		if (pred == Y[i-1]):
+			answer = "OK"
+			cnt += 1
+		else:
+			answer = "FAIL!"
+		
+		print(answer)
+
+	print("Total Correct answers: " + str(cnt) + " = " + str((cnt/i) * 100) + "% of Total")
+
+
 #FUNCAO MAIN
 if __name__ == "__main__":
 	
@@ -146,7 +219,7 @@ if __name__ == "__main__":
 	Y = [0, 0, 0, 1, 1]
 
 	neuron.perc_training(X, Y, 10000, 0.25)
-"""
+
 
 	X = [[0, 0, 0],
 	     [0, 0, 1],
@@ -164,11 +237,25 @@ if __name__ == "__main__":
 		 [0,0,0,0,0,1,0,0],
 		 [0,0,0,0,0,0,1,0],
 		 [0,0,0,0,0,0,0,1]]
+	"""
+
+
+	X = []
+	Y = []
+
+	for i in range(1, 9):
+		inputFile = "Noise " + str(i) + ".txt"
+		parseInput(inputFile, X, Y)
+
 
 	#Y = [[1],[0],[0],[0],[0],[0],[0],[0]]
 	neuron = Perceptron(3, 0, "degrau")
 	singleLayer = Layer(neuron, 8)
 	singleLayer.start_layer()
-	singleLayer.training_Layer(X, Y, 1000, 0.1)
+	singleLayer.layer_training(X, Y, 1000, 0.35)
 
-	print ("Prediction: " + str(singleLayer.out_Layer([1, 0, 0]))) #0,0,0,1,0,0,0,0]
+	parseTest("TestFile.txt", singleLayer)
+
+
+
+	#print ("Prediction: " + str(singleLayer.out_Layer([1, 0, 0]))) #0,0,0,1,0,0,0,0]

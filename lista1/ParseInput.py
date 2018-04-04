@@ -1,6 +1,6 @@
 from exercicio1 import Perceptron
 
-def parseInput(inputFile, nodeNum, X, Y):
+def parseInput(inputFile, X, Y):
 	#arquivo de input
 	f1=open(inputFile, "r")
 
@@ -11,13 +11,13 @@ def parseInput(inputFile, nodeNum, X, Y):
 		auxArray = line.split()
 
 		X.append([float(auxArray[0]), float(auxArray[1]), float(auxArray[2])])
-		Y.append(int(auxArray[3+nodeNum]))
+		Y.append([int(x) for x in auxArray[3:]])
 
 	f1.close()
 
 	return X, Y
 
-def parseTest(inputFile):
+def parseTest(inputFile, neuron):
 	f1 = open(inputFile, "r")
 	lines = f1.readlines()
 	cnt = i = 0
@@ -62,7 +62,7 @@ if __name__ == "__main__":
 	singleLayer.training_Layer(X, Y, 1000, 0.1)
 
 
-	parseTest("TestFile.txt")
+	parseTest("TestFile.txt", neuron)
 	#print ("Prediction: " + str(neuron.forward([-0.05, 0.01, 0.03]))) #0 0 0 
 	#print ("Prediction: " + str(neuron.forward([-0.05, 0.01, 1.03]))) #0 0 1
 	#print ("Prediction: " + str(neuron.forward([-0.05, 1.01, 0.03]))) #0 1 0
