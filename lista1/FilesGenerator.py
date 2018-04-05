@@ -25,7 +25,6 @@ def trainingGenerator():
 
 	f1.close()
 
-
 def testGenerator():
 	f1=open("cubeSample1.txt", "r")
 	f = f1.readlines()
@@ -50,6 +49,53 @@ def testGenerator():
 	f2.close()
 	f1.close()
 
+def traningXORGenerator():
+	f1=open("XORSample.txt", "r")
+	f = f1.readlines()
+	i = 0
+	f2 = open("NoiseXOR.txt", "w")
+
+	for line in f:
+		x = line.split()
+		for j in range(10):
+			(a,b) = (float(x[0]), float(x[1]))
+			a += random.uniform(-0.1, 0.1)
+			b += random.uniform(-0.1, 0.1)
+			l = [str(a), str(b), x[2]]
+			s = ' '.join(l)
+			s += '\n'
+
+			f2.write(s)
+
+		
+	f2.close()
+	f1.close()
+
+def testXORGenerator():
+	f1=open("XORSample.txt", "r")
+	f = f1.readlines()
+	f2 = open("TestXORFile.txt", "w")
+
+
+	for i in range(10):
+		line = random.choice(f)
+		x = line.split()
+
+		
+		(a,b) = (float(x[0]), float(x[1]))
+		a += random.uniform(-0.1, 0.1)
+		b += random.uniform(-0.1, 0.1)
+		l = [str(a), str(b), x[2]]
+		s = ' '.join(l)
+		s += '\n'
+
+		f2.write(s)
+
+	f2.close()
+	f1.close()
+
 if __name__ == "__main__":
 	#trainingGenerator()
-	testGenerator()
+	#testGenerator()
+	#traningXORGenerator()
+	testXORGenerator()

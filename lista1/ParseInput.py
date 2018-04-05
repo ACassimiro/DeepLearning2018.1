@@ -40,10 +40,23 @@ def parseTest(inputFile, neuron):
 
 	print("Total Correct answers: " + str(cnt) + " = " + str((cnt/i) * 100) + "% of Total")
 
+def parseXORInput(inputFile):
+	f1=open(inputFile, "r")
+	lines = f1.readlines()
+	X =[]
+	Y =[[]]
+
+	for line in lines:
+		auxArray = line.split()
+		X.append([float(auxArray[0]), float(auxArray[1])])
+		Y[0].append(float(auxArray[2]))
+	
+	return X,Y
 
 if __name__ == "__main__":
+	parseXORInput("XORSample.txt")
 
-	nodeNum = 0
+	'''nodeNum = 0
 
 	X = []
 	Y = []
@@ -60,9 +73,8 @@ if __name__ == "__main__":
 	singleLayer = Layer(neuron, 8)
 	singleLayer.start_layer()
 	singleLayer.training_Layer(X, Y, 1000, 0.1)
+	parseTest("TestFile.txt", neuron)'''
 
-
-	parseTest("TestFile.txt", neuron)
 	#print ("Prediction: " + str(neuron.forward([-0.05, 0.01, 0.03]))) #0 0 0 
 	#print ("Prediction: " + str(neuron.forward([-0.05, 0.01, 1.03]))) #0 0 1
 	#print ("Prediction: " + str(neuron.forward([-0.05, 1.01, 0.03]))) #0 1 0

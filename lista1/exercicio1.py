@@ -25,7 +25,6 @@ class Perceptron:
 		Parametro: num_inputs - quantidade de entradas X
 		Retorna: w,b - pesos e bias da rede inicializados
 		"""
-		### Insira seu cadigo aqui (2 linhas)
 
 		w = np.random.random_sample((num_inputs)) - 0.5
 		
@@ -40,7 +39,6 @@ class Perceptron:
 					z - vetor com os valores de entrada X multiplicado pelos pesos
 		Retorna: saida da funcao de ativacao
 		"""
-		### Seu codigo aqui (2 linhas)
 		if func_type == 'sigmoid':
 			return 1/(1 + np.exp(z*(-1)))
 		elif func_type == 'tanh':
@@ -72,14 +70,11 @@ class Perceptron:
 		Parametros: x - entradas
 		"""
 		z = np.dot(self.w, x) + self.b
-		#print ("Valor de z")
-		#print (z)
 		out = self.activation_func(self.func_type, z)
 		return out
 
 	#FUNCAO DE PREDICAO
 	def predict(self, out):
-		#print (out)
 		if (out>0.5):
 			return 1
 		return 0
@@ -162,10 +157,7 @@ class Layer:
 		for i in range(len(X)):
 			Y[i] = X[i][len(X[i]) - 1]
 			X[i].pop()
-			#print(X[i])
-			#print(Y[i])
-
-
+			
 		return X, Y 
 
 	def layer_training(self, X, Y, num_iteration, learning_rate):
@@ -242,19 +234,10 @@ if __name__ == "__main__":
 		parseInput(inputFile, X, Y)
 
 
-	#Y = [[1],[0],[0],[0],[0],[0],[0],[0]]
-
-	"""
-	for i in range(len(Y)):
-		for j in range(len(Y[0])):
-			if(Y[i][j] == 1):
-				Y[i][j] = 100
-	"""
-
 	neuron = Perceptron(3, 0, "relu")
 	singleLayer = Layer(neuron, 8)
 	singleLayer.start_layer()
-	singleLayer.layer_training(X, Y, 3000, 0.25)
+	singleLayer.layer_training(X, Y, 1000, 0.25)
 
 
 	parseTest("TestFile.txt", singleLayer)
