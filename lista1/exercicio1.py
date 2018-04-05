@@ -109,6 +109,9 @@ class Perceptron:
 				
 			X, Y = self.input_output_scramble(X, Y)
 
+
+
+
 class Layer:
 	def __init__(self, perceptron, num_perceptron):
 		self.num_perceptron = num_perceptron
@@ -126,6 +129,23 @@ class Layer:
 
 		return out
 
+	def predict(self, out):
+		auxBig = -1
+		auxI = 0
+		for i in range(self.num_perceptron):
+			if(out[i]>auxBig):
+				auxBig = out[i]
+				auxI = i
+
+		for count in range(self.num_perceptron):
+			if(count == auxI):
+				out[count] = 1
+			else:
+				out[count] = 0
+
+		return out
+
+
 	def training_Layer(self, X, Y, num_iteration, learning_rate):
 		npY = np.array(Y)
 		for i in range(self.num_perceptron):
@@ -133,20 +153,22 @@ class Layer:
 
 
 	def input_output_scramble(self, X, Y):
-		
 		for i in range(len(X)):
 			X[i].append(Y[i])
+
 
 		np.random.shuffle(X)
 
 		for i in range(len(X)):
 			Y[i] = X[i][len(X[i]) - 1]
 			X[i].pop()
+			#print(X[i])
+			#print(Y[i])
+
 
 		return X, Y 
 
 	def layer_training(self, X, Y, num_iteration, learning_rate):
-
 		for i in range(num_iteration):
 			for j in range(len(X)):
 				for innerCount in range(len(self.layer)):
@@ -155,8 +177,6 @@ class Layer:
 					self.layer[innerCount].w = np.add(self.layer[innerCount].w, np.dot(erro * learning_rate, X[j]))
 				
 			X, Y = self.input_output_scramble(X, Y)
-
-
 
 
 #FUNCAO DE PARSING DOS ARQUIVOS NOISE
@@ -179,6 +199,8 @@ def parseInput(inputFile, X, Y):
 
 
 def parseTest(inputFile, layer):
+	verbose = True
+
 	f1 = open(inputFile, "r")
 	lines = f1.readlines()
 	cnt = i = 0
@@ -186,22 +208,25 @@ def parseTest(inputFile, layer):
 		i += 1
 		auxArray = line.split()
 		X = [float(auxArray[0]), float(auxArray[1]), float(auxArray[2])]
-		Y.append([int(x) for x in auxArray[3:]])
+		Y = [int(x) for x in auxArray[3:]]
 
-		pred = layer.out_Layer(X)
+		out = layer.out_Layer(X)
+		pred = layer.predict(out)
 
-		print ("Prediction: ")
-		print(pred)
-		print("Output Expected: ") 
-		print(Y[i-1])
+		if verbose:
+			print ("Prediction: ")
+			print(pred)
+			print("Output Expected: ") 
+			print(Y)
 
-		if (pred == Y[i-1]):
+		if (pred == Y):
 			answer = "OK"
 			cnt += 1
 		else:
 			answer = "FAIL!"
 		
-		print(answer)
+		if verbose:	
+			print(answer)
 
 	print("Total Correct answers: " + str(cnt) + " = " + str((cnt/i) * 100) + "% of Total")
 
@@ -209,37 +234,6 @@ def parseTest(inputFile, layer):
 #FUNCAO MAIN
 if __name__ == "__main__":
 	
-	"""neuron = Perceptron(3, 0, "degrau")
-
-	X = [[0, 0, 0],
-	     [0, 0, 1],
-	     [0, 1, 0],
-	     [0, 1, 1],
-	     [0, 1, 1]]
-	Y = [0, 0, 0, 1, 1]
-
-	neuron.perc_training(X, Y, 10000, 0.25)
-
-
-	X = [[0, 0, 0],
-	     [0, 0, 1],
-	     [0, 1, 0],
-	     [1, 0, 0],
-	     [0, 1, 1],
-	     [1, 0, 1],
-	     [1, 1, 0],
-	     [1, 1, 1]]
-	Y = [[1,0,0,0,0,0,0,0], 
-		 [0,1,0,0,0,0,0,0], 
-		 [0,0,1,0,0,0,0,0], 
-		 [0,0,0,1,0,0,0,0],
-		 [0,0,0,0,1,0,0,0],
-		 [0,0,0,0,0,1,0,0],
-		 [0,0,0,0,0,0,1,0],
-		 [0,0,0,0,0,0,0,1]]
-	"""
-
-
 	X = []
 	Y = []
 
@@ -249,13 +243,22 @@ if __name__ == "__main__":
 
 
 	#Y = [[1],[0],[0],[0],[0],[0],[0],[0]]
-	neuron = Perceptron(3, 0, "degrau")
+
+	"""
+	for i in range(len(Y)):
+		for j in range(len(Y[0])):
+			if(Y[i][j] == 1):
+				Y[i][j] = 100
+	"""
+
+	neuron = Perceptron(3, 0, "relu")
 	singleLayer = Layer(neuron, 8)
 	singleLayer.start_layer()
-	singleLayer.layer_training(X, Y, 1000, 0.35)
+	singleLayer.layer_training(X, Y, 3000, 0.25)
+
 
 	parseTest("TestFile.txt", singleLayer)
 
-
+	print()
 
 	#print ("Prediction: " + str(singleLayer.out_Layer([1, 0, 0]))) #0,0,0,1,0,0,0,0]
