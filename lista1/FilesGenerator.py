@@ -1,4 +1,5 @@
 import random 
+import math
 
 def trainingGenerator():
 	f1=open("cubeSample1.txt", "r")
@@ -94,8 +95,21 @@ def testXORGenerator():
 	f2.close()
 	f1.close()
 
+def trainingSinGenerator():
+	f1=open("trainingSin.txt", "w")
+	#f1=open("testSin.txt", "w")
+	
+	for i in range(5000):
+		x = random.uniform(0.1, 4)
+		s =''
+		s += str(x) + ' ' + str(math.sin(x*math.pi)/(x*math.pi)) + '\n'
+		f1.write(s)
+	f1.close()
+
+
 if __name__ == "__main__":
 	#trainingGenerator()
 	#testGenerator()
 	#traningXORGenerator()
-	testXORGenerator()
+	#testXORGenerator()
+	trainingSinGenerator()

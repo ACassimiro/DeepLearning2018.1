@@ -53,6 +53,19 @@ def parseXORInput(inputFile):
 	
 	return X,Y
 
+def parseSinInput(inputFile):
+	f1=open(inputFile, "r")
+	lines = f1.readlines()
+	X =[]
+	Y =[[]]
+
+	for line in lines:
+		auxArray = line.split()
+		X.append([float(auxArray[0])])
+		Y[0].append(float(auxArray[1]))
+	
+	return X,Y
+
 if __name__ == "__main__":
 	parseXORInput("XORSample.txt")
 

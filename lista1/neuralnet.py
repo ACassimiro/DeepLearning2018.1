@@ -1,10 +1,9 @@
 #PERCEPTRON
-
 import copy
 import numpy as np
 import matplotlib.pyplot as plt
 import random
-from ParseInput import parseXORInput
+from ParseInput import *
 from scipy.interpolate import spline
 from sklearn.metrics import classification_report
 from sklearn.metrics import confusion_matrix
@@ -32,11 +31,11 @@ class NeuralNet():
     def relu(self, x):
         return np.maximum(x, 0)
     def relu_(self, x):
-        return 0
+        return self.step(x)
     def tanh(self, x):
-        return (2/(1 + np.exp(z*(-2))))-1
+        return np.tanh(x)
     def tanh_(self, x):
-        return 0
+        return 2/(np.cosh(2*x)+1)
 
     def activation_func(self, func_type, x):
         if func_type == 'sigmoid':
@@ -80,10 +79,6 @@ class NeuralNet():
                 erro = [None] * len(outs)
                 delta = [None] * len(outs)
 
-                print()
-                print(outs)
-                print()
-
                 #Propaga o erro pra trás
                 for i in range((len(outs)-1),-1,-1):
                     #Caso especial pra a saída da rede
@@ -111,8 +106,6 @@ class NeuralNet():
             erro = [None] * len(outs)
             delta = [None] * len(outs)
 
-            print(outs)
-
             #Propaga o erro pra trás
             for i in range((len(outs)-1),-1,-1):
                 #Caso especial pra a saída da rede
@@ -138,23 +131,29 @@ class NeuralNet():
             print("Layer " + str(i))
             print (self.layer[i].layer_weights)
 
+    def predict(self, treshold, x):
+        return 1 if x > treshold else 0
+
 if __name__ == "__main__":
     random.seed(1)
+    
+    '''
+    #Testes para XOR
     layer1 = NeuronLayer(4, 2)
     layer2 = NeuronLayer(1, 4)
 
-    nn = NeuralNet([layer1, layer2], 2, "sigmoid")
+    nn = NeuralNet([layer1, layer2], 2, "tanh")
 
-    #print("1) Random weighs")
-    #nn.print_weights()
+    print("1) Random weighs")
+    nn.print_weights()
 
     X_training,Y_training = parseXORInput("NoiseXOR.txt")
 
     input_data = np.array(X_training)
     output_data = np.array(Y_training).T
-    #print(output_data)
 
-    nn.stoc_training(input_data, output_data, 1000, 0.2)
+    nn.batch_training(input_data, output_data, 60000, 0.2)
+    #nn.stoc_training(input_data, output_data, 60000, 0.2)
     
     print("2) Weighs after training")
     nn.print_weights()
@@ -163,11 +162,36 @@ if __name__ == "__main__":
 
     for x in range(len(X_test)):     
         out = nn.forward(np.array(X_test[x]))
-        print ("3) Test")
-        for i in range(len(out)):
-            print("Outputs from layer " + str(i))
-            print(out[i])
+
+        print("Prediceted : " + str( nn.predict(0.5, out[len(out)-1])))
+        print("Expected : " + str(Y_test[0][x]))'''
+    
+
+    #Testes para funcao Seno
+    layer1 = NeuronLayer(4, 1)
+    layer2 = NeuronLayer(1, 4)
+
+    nn = NeuralNet([layer1, layer2], 2, "sigmoid")
+
+    print("1) Random weighs")
+    nn.print_weights()
+
+    X_training,Y_training = parseSinInput("trainingSin.txt")
+
+    input_data = np.array(X_training)
+    output_data = np.array(Y_training).T
+
+    nn.batch_training(input_data, output_data, 30000, 0.00001)
+    #nn.stoc_training(input_data, output_data, 5000, 0.2)
+    
+    print("2) Weighs after training")
+    nn.print_weights()
+
+    X_test, Y_test = parseSinInput("testSin.txt")
+
+    for x in range(len(X_test)):     
+        out = nn.forward(np.array(X_test[x]))
+
 
         print("Prediceted : " + str(out[len(out)-1]))
         print("Expected : " + str(Y_test[0][x]))
-    
