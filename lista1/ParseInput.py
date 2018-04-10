@@ -66,6 +66,30 @@ def parseSinInput(inputFile):
 	
 	return X,Y
 
+
+def parsePatternInput(inputFile):
+	#arquivo de input
+	f1=open(inputFile, "r")
+
+	X = []
+	Y = []
+
+	#processamento das linhas
+	lines = f1.readlines()
+
+	for line in lines:
+		auxArray = line.split()
+
+		X.append([float(auxArray[0]), float(auxArray[1])])
+		Y.append([int(x) for x in auxArray[2:]])
+
+	f1.close()
+
+	return X, Y
+
+
+
+
 if __name__ == "__main__":
 	parseXORInput("XORSample.txt")
 

@@ -72,8 +72,9 @@ class NeuralNet():
 
 
     def mt_training(self, input_data, output_data, iterations, learning_rate, moment_constant):
-
+        
         for it in range(iterations):
+        
             old_delta = []
             for k in (range(len(input_data))):
 
@@ -109,6 +110,9 @@ class NeuralNet():
 
                 old_delta = delta
 
+        
+
+
 
     def stoc_training(self, input_data, output_data, iterations, learning_rate):
 
@@ -142,7 +146,9 @@ class NeuralNet():
 
 
     def batch_training(self, input_data, output_data, iterations, learning_rate):
+        
         for it in range(iterations):
+           
             outs = self.forward(input_data)
             erro = [None] * len(outs)
             delta = [None] * len(outs)
@@ -151,6 +157,7 @@ class NeuralNet():
             for i in range((len(outs)-1),-1,-1):
                 #Caso especial pra a saída da rede
                 if i == (len(outs)-1):
+                    #print(output_data)
                     erro[i] = output_data - outs[i]
                 else:
                     erro[i] = np.dot(delta[i+1], self.layer[i+1].layer_weights.T)
@@ -166,6 +173,7 @@ class NeuralNet():
                 else:
                     self.layer[i].layer_weights += learning_rate * np.dot(outs[i-1].T, delta[i])
 
+           
 
     def print_weights(self):
         for i in range(self.n_layer):
@@ -174,6 +182,28 @@ class NeuralNet():
 
     def predict(self, treshold, x):
         return 1 if x > treshold else 0
+
+    def predictPattern(self, out):
+        auxVal = -10000
+        auxIndex = 0
+
+        i = -1
+        for val in out:
+            i += 1
+
+            if(auxVal < val):
+                auxVal = val
+                auxIndex = i
+
+        for count in range(len(out)):
+            if (count == auxIndex):
+                out[count] = 1
+            else:
+                out[count] = 0
+
+        return out
+ 
+
 
 if __name__ == "__main__":
     random.seed(1)
@@ -208,9 +238,9 @@ if __name__ == "__main__":
         print("Prediceted : " + str( nn.predict(0.5, out[len(out)-1])))
         print("Expected : " + str(Y_test[0][x])) '''
 
-    #Testes para funcao Seno
-    layer1 = NeuronLayer(3, 1)
-    layer2 = NeuronLayer(1, 3)
+    '''#Testes para funcao Seno
+    layer1 = NeuronLayer(4, 1)
+    layer2 = NeuronLayer(1, 4)
 
     nn = NeuralNet([layer1, layer2], 2, "tanh")
 
@@ -222,9 +252,9 @@ if __name__ == "__main__":
     input_data = np.array(X_training)
     output_data = np.array(Y_training).T
 
-    #nn.batch_training(input_data, output_data, 30000, 0.00001)
+    #nn.batch_training(input_data, output_data, 30000, 0.0001)
     #nn.stoc_training(input_data, output_data, 5000, 0.2)
-    nn.mt_training(input_data, output_data, 2000, 0.0001, 0.05)
+    nn.mt_training(input_data, output_data, 100000, 0.001, 0.015)
 
     print("2) Weighs after training")
     nn.print_weights()
@@ -236,4 +266,41 @@ if __name__ == "__main__":
 
 
         print("Prediceted : " + str(out[len(out)-1]))
-        print("Expected : " + str(Y_test[0][x]))
+        print("Expected : " + str(Y_test[0][x])) '''
+
+    
+    #Testes para reconhecimento de padrão (4)
+    layer1 = NeuronLayer(6, 2)
+    layer2 = NeuronLayer(8, 6)
+
+    nn = NeuralNet([layer1, layer2], 2, "sigmoid")
+
+    print("1) Random weighs")
+    nn.print_weights()
+
+
+    X_training,Y_training = parsePatternInput("trainingPattern.txt")
+
+    input_data = np.array(X_training)
+    output_data = np.array(Y_training)
+
+    nn.batch_training(input_data, output_data, 100000, 0.0001)
+    #nn.stoc_training(input_data, output_data, 60000, 0.2)
+    #nn.mt_training(input_data, output_data, 60000, 0.2, 0.1)
+
+    print("2) Weighs after training")
+    nn.print_weights()
+    print()
+    print()
+
+    X_test, Y_test = parsePatternInput("testPattern.txt")
+
+    #print(Y_test)
+
+
+    for x in range(len(X_test)):
+        print()
+        out = nn.forward(np.array(X_test[x]))
+
+        print("Prediceted : " + str(nn.predictPattern(out[len(out)-1])))
+        print("Expected : " + str(Y_test[x]))
