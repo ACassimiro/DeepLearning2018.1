@@ -12,7 +12,7 @@ from sklearn.metrics import accuracy_score
 class NeuronLayer():
     def __init__(self, n_neurons, n_inputs):
         self.layer_weights = 2 * np.random.random((n_inputs, n_neurons)) - 1 #Cria uma matriz inputsxneurons
-        self.layer_bias =  2 * np.random.random(n_neurons) - 1 #Cria uma matriz de bias
+        self.layer_bias = 1 # 2 * np.random.random(n_neurons) - 1 #Cria uma matriz de bias
 
 class NeuralNet():
     def __init__(self, layer, n_layer, func_type):
@@ -151,7 +151,7 @@ class NeuralNet():
 
                     self.layer[i].layer_bias += learning_rate * np.sum(delta[i], axis=0)
 
-                print(np.average(erro[-1]) ) 
+                #print(np.average(erro[-1]) ) 
 
 
 
@@ -190,7 +190,7 @@ class NeuralNet():
 
                 self.layer[i].layer_bias += learning_rate * np.sum(delta[i], axis=0)
 
-            print(np.average(erro[-1]) ) 
+            #print(np.average(erro[-1]) ) 
            
     def print_weights(self):
         for i in range(self.n_layer):

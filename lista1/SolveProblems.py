@@ -97,7 +97,7 @@ def solveSine():
     print("1) Random weighs")
     nn.print_weights()
 
-    X_training,Y_training = parseSinInput("TrainingSin.txt")
+    X_training,Y_training = parseSinInput("trainingSin.txt")
 
     input_data = np.array(X_training)
     output_data = np.array(Y_training).T
@@ -112,7 +112,7 @@ def solveSine():
     nn.print_weights()
     showGraph(input_data, output_data, input_data, nn.forward(input_data)[-1])
 
-    X_test, Y_test = parseSinInput("TestSin.txt")
+    X_test, Y_test = parseSinInput("testSin.txt")
 
     for x in range(len(X_test)):
         out = nn.forward(np.array(X_test[x]))
@@ -164,6 +164,45 @@ def solvePatternRec():
 	print(str(cnt) + " ACERTOS DE " + str(len(X_test)))
 	#showGraph(X_test, Y_test[0], X_test, nn.forward(X_test)[-1])
 
+def solveEquation():
+    layer1 = NeuronLayer(20, 1)
+    layer2 = NeuronLayer(20, 20)
+    layer3 = NeuronLayer(1, 20)
+
+    nn = NeuralNet([layer1, layer2, layer3], 3, "tanh")
+
+    print("1) Random weighs")
+    nn.print_weights()
+
+    X_training,Y_training = parseSinInput("trainingEquation.txt")
+
+    input_data = np.array(X_training)
+    output_data = np.array(Y_training).T
+
+    showGraph(input_data, output_data, input_data, nn.forward(input_data)[-1])
+
+    nn.batch_training(input_data, output_data, 10000, 0.00005)
+    #nn.stoc_training(input_data, output_data, 1000, 0.0001)
+    #nn.mt_training(input_data, output_data, 1000, 0.001, 0.02)
+
+    print("2) Weighs after training")
+    nn.print_weights()
+    showGraph(input_data, output_data, input_data, nn.forward(input_data)[-1])
+
+    """
+    X_test, Y_test = parseSinInput("testSin.txt")
+
+    for x in range(len(X_test)):
+        out = nn.forward(np.array(X_test[x]))
+
+        print("Prediceted : " + str(out[len(out)-1]))
+        print("Expected : " + str(Y_test[0][x]))
+        print("*****") 
+
+    showGraph(X_test, Y_test[0], X_test, nn.forward(X_test)[-1])
+	"""
+
+
 def showGraph(X1, Y1, X2, Y2):
 	plt.plot(X1, Y1, '.')
 	plt.plot(X2, Y2, '.')
@@ -172,6 +211,7 @@ def showGraph(X1, Y1, X2, Y2):
 if __name__ == "__main__":
 	random.seed(1)
 	#solveCube()
-	solveXOR()
+	#solveXOR()
 	#solveSine()
-    #solvePatternRec()
+	#solvePatternRec()
+	solveEquation()

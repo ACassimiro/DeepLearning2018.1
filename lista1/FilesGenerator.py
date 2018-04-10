@@ -92,7 +92,7 @@ def testXORGenerator():
 
 def trainingSinGenerator():
     #f1=open("trainingSin.txt", "w")
-    f1=open("testSin.txt", "w")
+    f1=open("testEquation.txt", "w")
 
     for i in range(100):
         x = random.uniform(0.1, 4)
@@ -100,6 +100,19 @@ def trainingSinGenerator():
         s += str(x) + ' ' + str(math.sin(x*math.pi)/(x*math.pi)) + '\n'
         f1.write(s)
     f1.close()
+
+
+def trainingEquationGenerator():
+    #f1=open("trainingSin.txt", "w")
+    f1=open("trainingEquation.txt", "w")
+
+    for i in range(2000):
+        x = random.uniform(-5, 5)
+        s =''
+        s += str(x) + ' ' + str(math.sin(x + (1 - math.cos(2*x))/2)) + '\n'
+        f1.write(s)
+    f1.close()
+
 
 
 def trainingPatternGenerator():
@@ -212,6 +225,7 @@ if __name__ == "__main__":
     #testGenerator()
     #traningXORGenerator()
     #testXORGenerator()
-    trainingSinGenerator()
+    #trainingSinGenerator()
     #trainingPatternGenerator()
     #testPatternGenerator()
+    trainingEquationGenerator()
