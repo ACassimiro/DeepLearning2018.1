@@ -91,10 +91,10 @@ def testXORGenerator():
     f1.close()
 
 def trainingSinGenerator():
-    f1=open("trainingSin.txt", "w")
-    #f1=open("testSin.txt", "w")
+    #f1=open("trainingSin.txt", "w")
+    f1=open("testSin.txt", "w")
 
-    for i in range(5000):
+    for i in range(100):
         x = random.uniform(0.1, 4)
         s =''
         s += str(x) + ' ' + str(math.sin(x*math.pi)/(x*math.pi)) + '\n'
@@ -103,14 +103,14 @@ def trainingSinGenerator():
 
 
 def trainingPatternGenerator():
-    f1=open("trainingPattern.txt", "w")
+    f1=open("TrainingPattern2.txt", "w")
 
     # radius of the circle
     circle_r = 1
 
 
     # random angle
-    for x in range(5000):
+    for x in range(1000):
         alpha = 2 * math.pi * random.random()
         
         r = circle_r * random.random()
@@ -154,14 +154,14 @@ def trainingPatternGenerator():
     f1.close()  
 
 def testPatternGenerator():
-    f1=open("testPattern.txt", "w")
+    f1=open("TestPattern2.txt", "w")
 
     # radius of the circle
     circle_r = 1
 
 
     # random angle
-    for x in range(20):
+    for x in range(200):
         alpha = 2 * math.pi * random.random()
         
         r = circle_r * random.random()
@@ -208,10 +208,10 @@ def testPatternGenerator():
     
 
 if __name__ == "__main__":
-    trainingGenerator()
-    testGenerator()
+    #trainingGenerator()
+    #testGenerator()
     #traningXORGenerator()
     #testXORGenerator()
-    #trainingSinGenerator()
+    trainingSinGenerator()
     #trainingPatternGenerator()
     #testPatternGenerator()

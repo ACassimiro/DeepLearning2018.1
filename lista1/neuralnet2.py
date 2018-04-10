@@ -73,24 +73,20 @@ class NeuralNet():
 
 
     def mt_training(self, input_data, output_data, iterations, learning_rate, moment_constant):
-        
-        for it in range(iterations):        
+
+        for it in range(iterations):
             old_delta = []
             for k in (range(len(input_data))):
 
                 outs = self.forward([input_data[k]])
-                erro = []
-                delta = []
-
-                for i in range(len(outs)):
-                    erro.append(np.zeros(shape= (len(outs[i]), len(outs[i][0])) ))
-                    delta.append(np.zeros(shape= (len(outs[i]), len(outs[i][0])) ))
+                erro = [None] * len(outs)
+                delta = [None] * len(outs)
 
                 #Propaga o erro pra trás
                 for i in range((len(outs)-1),-1,-1):
                     #Caso especial pra a saída da rede
                     if i == (len(outs)-1):
-                        erro[i] = (output_data[k] - outs[i])
+                        erro[i] = (output_data[k] - outs[i])**2
                     else:
                         erro[i] = np.dot(delta[i+1], self.layer[i+1].layer_weights.T)
 
@@ -111,9 +107,6 @@ class NeuralNet():
                         else :
                             self.layer[i].layer_weights += learning_rate * np.dot(outs[i-1].T, delta[i]) + (moment_constant * old_delta[i])
 
-
-                    self.layer[i].layer_bias += learning_rate * np.sum(delta[i], axis=0)
-
                 old_delta = delta
 
 
@@ -123,18 +116,14 @@ class NeuralNet():
             for k in (range(len(input_data))):
 
                 outs = self.forward([input_data[k]])
-                erro = []
-                delta = []
-
-                for i in range(len(outs)):
-                    erro.append(np.zeros(shape= (len(outs[i]), len(outs[i][0])) ))
-                    delta.append(np.zeros(shape= (len(outs[i]), len(outs[i][0])) ))
+                erro = [None] * len(outs)
+                delta = [None] * len(outs)
 
                 #Propaga o erro pra trás
                 for i in range((len(outs)-1),-1,-1):
                     #Caso especial pra a saída da rede
                     if i == (len(outs)-1):
-                        erro[i] = (output_data[k] - outs[i])
+                        erro[i] = 1/2 * (output_data[k] - outs[i])**2
                     else:
                         erro[i] = np.dot(delta[i+1], self.layer[i+1].layer_weights.T)
 
@@ -148,10 +137,6 @@ class NeuralNet():
                         self.layer[i].layer_weights += learning_rate * np.dot(np.array([input_data[k]]).T, delta[i])
                     else:
                         self.layer[i].layer_weights += learning_rate * np.dot(outs[i-1].T, delta[i])
-
-                    self.layer[i].layer_bias += learning_rate * np.sum(delta[i], axis=0)
-
-                print(np.average(erro[-1]) ) 
 
 
 
@@ -191,7 +176,7 @@ class NeuralNet():
                 self.layer[i].layer_bias += learning_rate * np.sum(delta[i], axis=0)
 
             print(np.average(erro[-1]) ) 
-           
+
     def print_weights(self):
         for i in range(self.n_layer):
             print("Layer " + str(i))
@@ -200,66 +185,11 @@ class NeuralNet():
     def predict(self, treshold, x):
         return 1 if x > treshold else 0
 
-    def predictByHigherValue(self, out):
-        auxVal = -10000
-        auxIndex = 0
-
-        i = -1
-        for val in out:
-            i += 1
-
-            if(auxVal < val):
-                auxVal = val
-                auxIndex = i
-
-        for count in range(len(out)):
-            if (count == auxIndex):
-                out[count] = 1
-            else:
-                out[count] = 0
-
-        return out
- 
-
-
 if __name__ == "__main__":
     random.seed(1)
 
-    #Teste para o problema do cubo
-    layer1 = NeuronLayer(8, 3)
 
-    nn = NeuralNet([layer1], 1, "sigmoid")
-
-    print("1) Random weighs")
-    nn.print_weights()
-
-
-    X_training,Y_training = parseInput("trainingCube.txt")
-
-    input_data = np.array(X_training)
-    output_data = np.array(Y_training)
-
-    nn.batch_training(input_data, output_data, 10000, 0.001)
-    #nn.stoc_training(input_data, output_data, 60000, 0.2)
-    #nn.mt_training(input_data, output_data, 60000, 0.2, 0.1)
-
-    print("2) Weighs after training")
-    nn.print_weights()
-    print()
-    print()
-
-    X_test, Y_test = parseInput("testCube.txt")
-
-    #print(Y_test)
-
-    for x in range(len(X_test)):
-        print()
-        out = nn.forward(np.array(X_test[x]))
-
-        print("Prediceted : " + str(nn.predictByHigherValue(out[len(out)-1])))
-        print("Expected : " + str(Y_test[x]))
-
-    '''    #Testes para XOR
+    #Testes para XOR
     layer1 = NeuronLayer(4, 2)
     layer2 = NeuronLayer(1, 4)
 
@@ -285,15 +215,16 @@ if __name__ == "__main__":
     for x in range(len(X_test)):
         out = nn.forward(np.array(X_test[x]))
 
-        print("Prediceted : " + str( nn.predict(0.5, out[len(out)-1])))
-        print("Expected : " + str(Y_test[0][x])) 
-        print("*****")'''
+        print("Prediceted : " + str( nn.predict(0.5, out[-1])))
+        print("Expected : " + str(Y_test[0][x]))
+        print("*****")
 
     '''#Testes para funcao Seno
-    layer1 = NeuronLayer(4, 1)
-    layer2 = NeuronLayer(1, 4)
+    layer1 = NeuronLayer(10, 1)
+    layer2 = NeuronLayer(10, 10)
+    layer3 = NeuronLayer(1, 10)
 
-    nn = NeuralNet([layer1, layer2], 2, "tanh")
+    nn = NeuralNet([layer1, layer2,layer3], 3, "tanh")
 
     print("1) Random weighs")
     nn.print_weights()
@@ -303,9 +234,9 @@ if __name__ == "__main__":
     input_data = np.array(X_training)
     output_data = np.array(Y_training).T
 
-    #nn.batch_training(input_data, output_data, 30000, 0.0001)
+    nn.batch_training(input_data, output_data, 5000, 0.0001)
     #nn.stoc_training(input_data, output_data, 5000, 0.2)
-    nn.mt_training(input_data, output_data, 100000, 0.001, 0.015)
+    #nn.mt_training(input_data, output_data, 2000, 0.0001, 0.05)
 
     print("2) Weighs after training")
     nn.print_weights()
@@ -317,41 +248,5 @@ if __name__ == "__main__":
 
 
         print("Prediceted : " + str(out[len(out)-1]))
-        print("Expected : " + str(Y_test[0][x])) '''
-
-    
-    """#Testes para reconhecimento de padrão (4)
-    layer1 = NeuronLayer(6, 2)
-    layer2 = NeuronLayer(8, 6)
-
-    nn = NeuralNet([layer1, layer2], 2, "sigmoid")
-
-    print("1) Random weighs")
-    nn.print_weights()
-
-
-    X_training,Y_training = parsePatternInput("trainingPattern.txt")
-
-    input_data = np.array(X_training)
-    output_data = np.array(Y_training)
-
-    nn.batch_training(input_data, output_data, 100000, 0.0001)
-    #nn.stoc_training(input_data, output_data, 60000, 0.2)
-    #nn.mt_training(input_data, output_data, 60000, 0.2, 0.1)
-
-    print("2) Weighs after training")
-    nn.print_weights()
-    print()
-    print()
-
-    X_test, Y_test = parsePatternInput("testPattern.txt")
-
-    #print(Y_test)
-
-
-    for x in range(len(X_test)):
-        print()
-        out = nn.forward(np.array(X_test[x]))
-
-        print("Prediceted : " + str(nn.predictByHigherValue(out[len(out)-1])))
-        print("Expected : " + str(Y_test[x]))"""
+        print("Expected : " + str(Y_test[0][x]))
+        print("*****")'''
