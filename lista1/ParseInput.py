@@ -1,11 +1,14 @@
 from exercicio1 import Perceptron
 
-def parseInput(inputFile, X, Y):
+def parseInput(inputFile):
 	#arquivo de input
 	f1=open(inputFile, "r")
 
 	#processamento das linhas
 	lines = f1.readlines()
+
+	X = []
+	Y = []
 
 	for line in lines:
 		auxArray = line.split()

@@ -183,7 +183,7 @@ class NeuralNet():
     def predict(self, treshold, x):
         return 1 if x > treshold else 0
 
-    def predictPattern(self, out):
+    def predictByHigherValue(self, out):
         auxVal = -10000
         auxIndex = 0
 
@@ -208,6 +208,40 @@ class NeuralNet():
 if __name__ == "__main__":
     random.seed(1)
 
+    #Teste para o problema do cubo
+    layer1 = NeuronLayer(6, 3)
+    layer2 = NeuronLayer(8, 6)
+
+    nn = NeuralNet([layer1, layer2], 2, "sigmoid")
+
+    print("1) Random weighs")
+    nn.print_weights()
+
+
+    X_training,Y_training = parseInput("trainingCube.txt")
+
+    input_data = np.array(X_training)
+    output_data = np.array(Y_training)
+
+    nn.batch_training(input_data, output_data, 10000, 0.001)
+    #nn.stoc_training(input_data, output_data, 60000, 0.2)
+    #nn.mt_training(input_data, output_data, 60000, 0.2, 0.1)
+
+    print("2) Weighs after training")
+    nn.print_weights()
+    print()
+    print()
+
+    X_test, Y_test = parseInput("testCube.txt")
+
+    #print(Y_test)
+
+    for x in range(len(X_test)):
+        print()
+        out = nn.forward(np.array(X_test[x]))
+
+        print("Prediceted : " + str(nn.predictByHigherValue(out[len(out)-1])))
+        print("Expected : " + str(Y_test[x]))
 
     '''    #Testes para XOR
     layer1 = NeuronLayer(4, 2)
@@ -269,7 +303,7 @@ if __name__ == "__main__":
         print("Expected : " + str(Y_test[0][x])) '''
 
     
-    #Testes para reconhecimento de padrão (4)
+    """#Testes para reconhecimento de padrão (4)
     layer1 = NeuronLayer(6, 2)
     layer2 = NeuronLayer(8, 6)
 
@@ -302,5 +336,5 @@ if __name__ == "__main__":
         print()
         out = nn.forward(np.array(X_test[x]))
 
-        print("Prediceted : " + str(nn.predictPattern(out[len(out)-1])))
-        print("Expected : " + str(Y_test[x]))
+        print("Prediceted : " + str(nn.predictByHigherValue(out[len(out)-1])))
+        print("Expected : " + str(Y_test[x]))"""
