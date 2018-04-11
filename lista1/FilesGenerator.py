@@ -104,9 +104,9 @@ def trainingSinGenerator():
 
 def trainingEquationGenerator():
     #f1=open("trainingSin.txt", "w")
-    f1=open("trainingEquation.txt", "w")
+    f1=open("TestEquation.txt", "w")
 
-    for i in range(2000):
+    for i in range(100):
         x = random.uniform(-5, 5)
         s =''
         s += str(x) + ' ' + str(math.sin(x + (1 - math.cos(2*x))/2)) + '\n'

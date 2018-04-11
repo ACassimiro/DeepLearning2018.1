@@ -4,13 +4,12 @@ import matplotlib.pyplot as plt
 
 def solveCube():
 	#Teste para o problema do cubo
-	layer1 = NeuronLayer(8, 3)
+	layer1 = NeuronLayer(8, 3, "degrau")
 
-	nn = NeuralNet([layer1], 1, "sigmoid")
+	nn = NeuralNet([layer1], 1)
 
 	print("1) Random weighs")
 	nn.print_weights()
-
 
 	X_training,Y_training = parseInput("trainingCube.txt")
 
@@ -19,18 +18,14 @@ def solveCube():
 
 	#showGraph(input_data, output_data, input_data, nn.forward(input_data)[-1])
 
-	nn.batch_training(input_data, output_data, 10000, 0.001)
-	#nn.stoc_training(input_data, output_data, 60000, 0.2)
-	#nn.mt_training(input_data, output_data, 60000, 0.2, 0.1)
+	#nn.batch_training(input_data, output_data, 10000, 0.001)
+	nn.stoc_training(input_data, output_data, 100, 0.2, 0.1)
 
 	print("2) Weighs after training")
 	nn.print_weights()
 	#showGraph(input_data, output_data, input_data, nn.forward(input_data)[-1])
 
-
 	X_test, Y_test = parseInput("testCube.txt")
-
-	#print(Y_test)
 
 	cnt = 0
 	for x in range(len(X_test)):
@@ -48,10 +43,10 @@ def solveCube():
 
 def solveXOR():
 	#Testes para XOR
-	layer1 = NeuronLayer(4, 2)
-	layer2 = NeuronLayer(1, 4)
+	layer1 = NeuronLayer(4, 2, "sigmoid")
+	layer2 = NeuronLayer(1, 4, "degrau")
 
-	nn = NeuralNet([layer1, layer2], 2, "sigmoid")
+	nn = NeuralNet([layer1, layer2], 2)
 
 	print("1) Random weighs")
 	nn.print_weights()
@@ -63,9 +58,8 @@ def solveXOR():
 
 	showGraph(input_data, output_data, input_data, nn.forward(input_data)[-1])
 
-	#nn.batch_training(input_data, output_data, 1000, 0.2)
-	#nn.stoc_training(input_data, output_data, 1000, 0.2)
-	nn.mt_training(input_data, output_data, 1000, 0.2, 0.2)
+	nn.batch_training(input_data, output_data, 1000, 0.2)
+	#nn.stoc_training(input_data, output_data, 1000, 0.2, 0.2)
 
 	print("2) Weighs after training")
 	nn.print_weights()
@@ -88,11 +82,11 @@ def solveXOR():
 	showGraph(X_test, Y_test[0], X_test, nn.forward(X_test)[-1])
 
 def solveSine():
-    layer1 = NeuronLayer(10, 1)
-    layer2 = NeuronLayer(10, 10)
-    layer3 = NeuronLayer(1, 10)
+    layer1 = NeuronLayer(20, 1, "tanh")
+    layer2 = NeuronLayer(20, 20, "tanh")
+    layer3 = NeuronLayer(1, 20, "tanh")
 
-    nn = NeuralNet([layer1, layer2, layer3], 3, "tanh")
+    nn = NeuralNet([layer1, layer2, layer3], 3)
 
     print("1) Random weighs")
     nn.print_weights()
@@ -105,8 +99,7 @@ def solveSine():
     showGraph(input_data, output_data, input_data, nn.forward(input_data)[-1])
 
     nn.batch_training(input_data, output_data, 5000, 0.0001)
-    #nn.stoc_training(input_data, output_data, 500, 0.0001)
-    #nn.mt_training(input_data, output_data, 100000, 0.001, 0.015)
+    #nn.stoc_training(input_data, output_data, 500, 0.0001, 0.015)
 
     print("2) Weighs after training")
     nn.print_weights()
@@ -124,11 +117,11 @@ def solveSine():
     showGraph(X_test, Y_test[0], X_test, nn.forward(X_test)[-1])
 
 def solvePatternRec():
-	layer1 = NeuronLayer(6, 2)
-	layer2 = NeuronLayer(10, 6)
-	layer3 = NeuronLayer(8, 10)
+	layer1 = NeuronLayer(6, 2, "tanh")
+	layer2 = NeuronLayer(10, 6, "tanh")
+	layer3 = NeuronLayer(8, 10, "tanh")
 
-	nn = NeuralNet([layer1, layer2, layer3], 3, "tanh")
+	nn = NeuralNet([layer1, layer2, layer3], 3)
 
 	print("1) Random weighs")
 	nn.print_weights()
@@ -140,9 +133,8 @@ def solvePatternRec():
 	output_data = np.array(Y_training)
 	#showGraph(input_data, output_data, input_data, nn.forward(input_data)[-1])
 
-	nn.batch_training(input_data, output_data, 50000, 0.0001)
-	#nn.stoc_training(input_data, output_data, 60000, 0.2)
-	#nn.mt_training(input_data, output_data, 60000, 0.2, 0.1)
+	#nn.batch_training(input_data, output_data, 5000, 0.0001)
+	nn.stoc_training(input_data, output_data, 1000, 0.001, 0.1)
 
 	print("2) Weighs after training")
 	nn.print_weights()
@@ -179,18 +171,17 @@ def solveEquation():
     input_data = np.array(X_training)
     output_data = np.array(Y_training).T
 
-    showGraph(input_data, output_data, input_data, nn.forward(input_data)[-1])
+    #showGraph(input_data, output_data, input_data, nn.forward(input_data)[-1])
 
     nn.batch_training(input_data, output_data, 10000, 0.00005)
-    #nn.stoc_training(input_data, output_data, 1000, 0.0001)
-    #nn.mt_training(input_data, output_data, 1000, 0.001, 0.02)
+    #nn.stoc_training(input_data, output_data, 1000, 0.0001, 0)
 
     print("2) Weighs after training")
     nn.print_weights()
     showGraph(input_data, output_data, input_data, nn.forward(input_data)[-1])
 
-    """
-    X_test, Y_test = parseSinInput("testSin.txt")
+    
+    X_test, Y_test = parseSinInput("TestEquation.txt")
 
     for x in range(len(X_test)):
         out = nn.forward(np.array(X_test[x]))
@@ -200,7 +191,7 @@ def solveEquation():
         print("*****") 
 
     showGraph(X_test, Y_test[0], X_test, nn.forward(X_test)[-1])
-	"""
+	
 
 
 def showGraph(X1, Y1, X2, Y2):
@@ -213,5 +204,5 @@ if __name__ == "__main__":
 	#solveCube()
 	#solveXOR()
 	#solveSine()
-	#solvePatternRec()
-	solveEquation()
+	solvePatternRec()
+	#solveEquation()
