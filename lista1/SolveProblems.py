@@ -58,7 +58,7 @@ def solveXOR():
 
 	showGraph(input_data, output_data, input_data, nn.forward(input_data)[-1])
 
-	nn.batch_training(input_data, output_data, 1000, 0.2)
+	nn.batch_training(input_data, output_data, 300, 0.2)
 	#nn.stoc_training(input_data, output_data, 1000, 0.2, 0.2)
 
 	print("2) Weighs after training")
@@ -133,7 +133,7 @@ def solvePatternRec():
 	output_data = np.array(Y_training)
 	showGraph4(input_data, output_data)
 
-	nn.batch_training(input_data, output_data, 50000, 0.0001)
+	nn.batch_training(input_data, output_data, 10000, 0.0001)
 	#nn.stoc_training(input_data, output_data, 60000, 0.2, 0.1)
 
 	print("2) Weighs after training")
@@ -146,6 +146,7 @@ def solvePatternRec():
 
 	X_test, Y_test = parsePatternInput("TestPattern2.txt")
 	cnt = 0
+
 	Y_ = []
 
 	for x in range(len(X_test)):
@@ -159,7 +160,8 @@ def solvePatternRec():
 		if(np.all(nn.predictByHigherValue(out[-1]) == Y_test[x])):
 			cnt += 1
 
-	print(str(cnt) + " ACERTOS DE " + str(len(X_test)))
+	printConfusionForArray(np.array(Y_test), np.array(Y_))
+	#print(str(cnt) + " ACERTOS DE " + str(len(X_test)))
 	showGraph4(np.array(X_test), Y_)
 
 def solveEquation():
@@ -178,6 +180,7 @@ def solveEquation():
     output_data = np.array(Y_training).T
 
     showGraph(input_data, output_data, input_data, nn.forward(input_data)[-1])
+
 
     nn.batch_training(input_data, output_data, 10000, 0.00005)
     #nn.stoc_training(input_data, output_data, 100, 0.00001, 0.5)
@@ -198,7 +201,25 @@ def solveEquation():
 
     showGraph(X_test, Y_test[0], X_test, nn.forward(X_test)[-1])
 	
+def printConfusionForArray(Y, Y_pred):
+	print('Matriz de Confusão:')
 
+	y_pred = [0, 0, 0, 0, 0, 0, 0, 0]
+	y = [0, 0, 0, 0, 0, 0, 0, 0]
+
+
+	for instance in Y_pred.astype(int):
+		y_pred += instance
+
+	for instance in Y:
+		y += instance
+
+	print(len(y))
+	print(len(y_pred))
+	print(y_pred.tolist())
+	print(y.tolist())
+	print()
+	print(confusion_matrix(y, y_pred))
 
 def showGraph(X1, Y1, X2, Y2):
 	plt.plot(X1, Y1, '.')

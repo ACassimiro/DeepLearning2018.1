@@ -78,6 +78,8 @@ class NeuralNet():
 
     def stoc_training(self, input_data, output_data, iterations, learning_rate, moment_constant):
         
+        errorChart = []
+
         for it in range(iterations):        
             old_delta = []
             for k in (range(len(input_data))):
@@ -118,9 +120,15 @@ class NeuralNet():
                     self.layer[i].layer_bias += learning_rate * np.sum(delta[i], axis=0)
 
                 old_delta = delta
-                print(np.average(erro[-1]) ) 
+                #print(np.average(erro[-1]) ) 
+                errorChart.append(np.average(erro[-1]) ) 
+
+        self.printErrorChart(errorChart)
+
 
     def batch_training(self, input_data, output_data, iterations, learning_rate):
+
+        errorChart = []
 
         for it in range(iterations):
             outs = self.forward(input_data)
@@ -151,7 +159,20 @@ class NeuralNet():
 
                 self.layer[i].layer_bias += learning_rate * np.sum(delta[i], axis=0)
 
-            print(np.average(erro[-1]) ) 
+            errorChart.append(np.average(erro[-1]))
+            #print(np.average(erro[-1]) ) 
+
+        self.printErrorChart(errorChart)
+
+
+    def printErrorChart(self, errorChart):
+        plt.title("Matplotlib demo") 
+        plt.xlabel("x axis caption") 
+        plt.ylabel("y axis caption") 
+        plt.plot(range(0, len(errorChart)), errorChart) 
+        plt.show()
+
+
            
     def print_weights(self):
         for i in range(self.n_layer):
