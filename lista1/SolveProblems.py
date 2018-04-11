@@ -117,9 +117,9 @@ def solveSine():
     showGraph(X_test, Y_test[0], X_test, nn.forward(X_test)[-1])
 
 def solvePatternRec():
-	layer1 = NeuronLayer(6, 2, "tanh")
-	layer2 = NeuronLayer(10, 6, "tanh")
-	layer3 = NeuronLayer(8, 10, "tanh")
+	layer1 = NeuronLayer(20, 2, "tanh")
+	layer2 = NeuronLayer(20, 20, "tanh")
+	layer3 = NeuronLayer(8, 20, "tanh")
 
 	nn = NeuralNet([layer1, layer2, layer3], 3)
 
@@ -131,30 +131,36 @@ def solvePatternRec():
 
 	input_data = np.array(X_training)
 	output_data = np.array(Y_training)
-	#showGraph(input_data, output_data, input_data, nn.forward(input_data)[-1])
+	showGraph4(input_data, output_data)
 
 	nn.batch_training(input_data, output_data, 50000, 0.0001)
 	#nn.stoc_training(input_data, output_data, 60000, 0.2, 0.1)
 
 	print("2) Weighs after training")
 	nn.print_weights()
-	#showGraph(input_data, output_data, input_data, nn.forward(input_data)[-1])
+
+
+	Y_ = [nn.predictByHigherValue(nn.forward(input_data[x])[-1]) for x in range(len(input_data))] 
+
+	showGraph4(input_data, Y_)
 
 	X_test, Y_test = parsePatternInput("TestPattern2.txt")
 	cnt = 0
+	Y_ = []
 
 	for x in range(len(X_test)):
 		print()
 		out = nn.forward(np.array(X_test[x]))
-
-		print("Prediceted : " + str(nn.predictByHigherValue(out[len(out)-1])))
+		Y_pred = nn.predictByHigherValue(out[-1])
+		Y_.append(Y_pred)
+		print("Prediceted : " + str(Y_pred))
 		print("Expected : " + str(Y_test[x]))
 
 		if(np.all(nn.predictByHigherValue(out[-1]) == Y_test[x])):
 			cnt += 1
 
 	print(str(cnt) + " ACERTOS DE " + str(len(X_test)))
-	#showGraph(X_test, Y_test[0], X_test, nn.forward(X_test)[-1])
+	showGraph4(np.array(X_test), Y_)
 
 def solveEquation():
     layer1 = NeuronLayer(20, 1, "tanh")
@@ -199,10 +205,23 @@ def showGraph(X1, Y1, X2, Y2):
 	plt.plot(X2, Y2, '.')
 	plt.show()
 
+def showGraph4(X,Y):
+	Y_ = []
+	for y in Y:
+		for i in range(len(y)):
+			if y[i] == 1:
+				Y_.append(i)
+
+	colors = {0:'salmon', 1:'peru', 2:'magenta', 3:'forestgreen', 4:'khaki', 5:'aqua', 6:'hotpink', 7:'yellow'}
+	plt.figure(figsize=(5,5))
+	plt.scatter(X[:,0], X[:,1], s = 3, c=[colors[yp] for yp in Y_])
+	plt.axis('equal')
+	plt.show()
+
 if __name__ == "__main__":
 	random.seed(1)
 	#solveCube()
 	#solveXOR()
 	#solveSine()
-	#solvePatternRec()
-	solveEquation()
+	solvePatternRec()
+	#solveEquation()
