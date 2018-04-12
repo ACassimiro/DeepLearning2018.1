@@ -123,7 +123,7 @@ def trainingPatternGenerator():
 
 
     # random angle
-    for x in range(1000):
+    for x in range(5000):
         alpha = 2 * math.pi * random.random()
         
         r = circle_r * random.random()

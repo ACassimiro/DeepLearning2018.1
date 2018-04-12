@@ -167,8 +167,8 @@ class NeuralNet():
 
     def printErrorChart(self, errorChart):
         plt.title("Matplotlib demo") 
-        plt.xlabel("x axis caption") 
-        plt.ylabel("y axis caption") 
+        plt.xlabel("Num de iteracoes") 
+        plt.ylabel("Erro medio") 
         plt.plot(range(0, len(errorChart)), errorChart) 
         plt.show()
 

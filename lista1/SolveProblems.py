@@ -27,10 +27,14 @@ def solveCube():
 
 	X_test, Y_test = parseInput("testCube.txt")
 
+	Y_ = []
+
 	cnt = 0
 	for x in range(len(X_test)):
 		out = nn.forward(np.array(X_test[x]))
 
+		Y_.append(nn.predictByHigherValue(out[-1]))
+		
 		print("Prediceted : " + str(nn.predictByHigherValue(out[-1])))
 		print("Expected : " + str(Y_test[x]))
 		print("*****")
@@ -39,6 +43,9 @@ def solveCube():
 			cnt += 1
 
 	print(str(cnt) + " ACERTOS DE " + str(len(X_test)))
+
+	printConfusionForArray(np.array(Y_test), np.array(Y_))
+
 	#showGraph(X_test, Y_test[0], X_test, nn.forward(X_test)[-1])
 
 def solveXOR():
@@ -68,9 +75,13 @@ def solveXOR():
 	X_test, Y_test = parseXORInput("TestXORFile.txt")
 	cnt = 0
 
+	Y_ = []
+
 	for x in range(len(X_test)):
 		out = nn.forward(np.array(X_test[x]))
 
+		Y_.append(nn.predict(0.5, out[-1]))
+		
 		print("Prediceted : " + str( nn.predict(0.5, out[-1])))
 		print("Expected : " + str(Y_test[0][x])) 
 		print("*****")
@@ -78,6 +89,13 @@ def solveXOR():
 			cnt += 1
 
 	print(str(cnt) + " ACERTOS DE " + str(len(X_test)))
+
+	print()
+	print(Y_test)
+	print(Y_)
+	print()
+
+	printConfusionXOR(np.array(Y_test[0]), np.array(Y_))
 
 	showGraph(X_test, Y_test[0], X_test, nn.forward(X_test)[-1])
 
@@ -201,25 +219,48 @@ def solveEquation():
 
     showGraph(X_test, Y_test[0], X_test, nn.forward(X_test)[-1])
 	
-def printConfusionForArray(Y, Y_pred):
+def printConfusionForArray(y, y_pred):
 	print('Matriz de Confusão:')
 
-	y_pred = [0, 0, 0, 0, 0, 0, 0, 0]
-	y = [0, 0, 0, 0, 0, 0, 0, 0]
+	confMatrix = [[0, 0, 0, 0, 0, 0, 0 ,0],
+	[0, 0, 0, 0, 0, 0, 0 ,0],
+	[0, 0, 0, 0, 0, 0, 0 ,0],
+	[0, 0, 0, 0, 0, 0, 0 ,0],
+	[0, 0, 0, 0, 0, 0, 0 ,0],
+	[0, 0, 0, 0, 0, 0, 0 ,0],
+	[0, 0, 0, 0, 0, 0, 0 ,0],
+	[0, 0, 0, 0, 0, 0, 0 ,0]]
 
+	for i in range(len(y)):
+		for j in range(len(y[i])):
+			if((y_pred[i][j] == 1) & (y[i][j] == 1)):
+				confMatrix[j][j] += 1
+				break
+			elif ((y_pred[i][j] == 1) & (y[i][j] != 1)):
+				for k in range(len(y[i])):
+					if (y[i][k] == 1):
+						confMatrix[j][k] += 1
+				break
+	
+	for instance in confMatrix:
+		print(instance)
 
-	for instance in Y_pred.astype(int):
-		y_pred += instance
+	
+def printConfusionXOR(y, y_pred):
+	print('Matriz de Confusão:')
 
-	for instance in Y:
-		y += instance
+	confMatrix = [[0, 0], 
+	[0 ,0]]
 
-	print(len(y))
-	print(len(y_pred))
-	print(y_pred.tolist())
-	print(y.tolist())
-	print()
-	print(confusion_matrix(y, y_pred))
+	for i in range(len(y)):
+		if(y_pred[i] == y[i]):
+			confMatrix[int(y[i])][int(y[i])] += 1
+		else:
+			confMatrix[int(y[i])][int(y_pred[i])] += 1
+	
+	for instance in confMatrix:
+		print(instance)
+
 
 def showGraph(X1, Y1, X2, Y2):
 	plt.plot(X1, Y1, '.')
