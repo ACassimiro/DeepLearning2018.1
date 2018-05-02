@@ -1,0 +1,1 @@
+One-hot encoding é a representação de diferentes classificações em forma binária, de forma que na hora de ser entregue a uma rede neural os valores de treino, uma determinada classe que tenha um rótulo de valor mais alto acabe tendo mais peso na hora do treinamento.

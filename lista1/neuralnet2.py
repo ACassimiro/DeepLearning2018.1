@@ -169,13 +169,13 @@ class NeuralNet():
             for i in range(len(outs)):
                 #Caso especial pra entrada da rede
                 if i == 0:
-                    self.layer[i].layer_weights += learning_rate * input_data.T.dot(delta[i])                    
+                    self.layer[i].layer_weights += learning_rate * input_data.T.dot(delta[i])
                 else:
                     self.layer[i].layer_weights += learning_rate * outs[i-1].T.dot(delta[i])
 
                 self.layer[i].layer_bias += learning_rate * np.sum(delta[i], axis=0)
 
-            print(np.average(erro[-1]) ) 
+            print(np.average(erro[-1]) )
 
     def print_weights(self):
         for i in range(self.n_layer):

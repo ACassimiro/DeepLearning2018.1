@@ -1,4 +1,4 @@
-import random 
+import random
 import math
 
 def trainingGenerator():
@@ -63,7 +63,7 @@ def traningXORGenerator():
 
             f2.write(s)
 
-        
+
     f2.close()
     f1.close()
 
@@ -91,8 +91,8 @@ def testXORGenerator():
     f1.close()
 
 def trainingSinGenerator():
-    #f1=open("trainingSin.txt", "w")
-    f1=open("testEquation.txt", "w")
+    f1=open("trainingSin.txt", "w")
+    #f1=open("testEquation.txt", "w")
 
     for i in range(100):
         x = random.uniform(0.1, 4)
@@ -104,10 +104,21 @@ def trainingSinGenerator():
 
 def trainingEquationGenerator():
     #f1=open("trainingSin.txt", "w")
+    f1=open("trainingEquation.txt", "w")
+
+    for i in range(20000):
+        x = random.uniform(-10, 10)
+        s =''
+        s += str(x) + ' ' + str(math.sin(x + (1 - math.cos(2*x))/2)) + '\n'
+        f1.write(s)
+    f1.close()
+
+def testEquationGenerator():
+    #f1=open("trainingSin.txt", "w")
     f1=open("TestEquation.txt", "w")
 
-    for i in range(100):
-        x = random.uniform(-5, 5)
+    for i in range(200):
+        x = random.uniform(-10, 10)
         s =''
         s += str(x) + ' ' + str(math.sin(x + (1 - math.cos(2*x))/2)) + '\n'
         f1.write(s)
@@ -125,17 +136,17 @@ def trainingPatternGenerator():
     # random angle
     for x in range(1000):
         alpha = 2 * math.pi * random.random()
-        
+
         r = circle_r * random.random()
-        
+
         x = r * math.cos(alpha)
         y = r * math.sin(alpha)
 
         s = ''
         s += str(x) + ' ' + str(y) + ' '
 
-        c = math.sqrt((x*x) + (y*y))    
-      
+        c = math.sqrt((x*x) + (y*y))
+
         result = ['0 ', '0 ', '0 ', '0 ', '0 ', '0 ', '0 ', '0 ']
 
         if ((x>=0) & (y>=0)):
@@ -164,7 +175,7 @@ def trainingPatternGenerator():
 
         f1.write(s)
 
-    f1.close()  
+    f1.close()
 
 def testPatternGenerator():
     f1=open("TestPattern2.txt", "w")
@@ -176,17 +187,17 @@ def testPatternGenerator():
     # random angle
     for x in range(200):
         alpha = 2 * math.pi * random.random()
-        
+
         r = circle_r * random.random()
-        
+
         x = r * math.cos(alpha)
         y = r * math.sin(alpha)
 
         s = ''
         s += str(x) + ' ' + str(y) + ' '
 
-        c = math.sqrt((x*x) + (y*y))    
-      
+        c = math.sqrt((x*x) + (y*y))
+
         result = ['0 ', '0 ', '0 ', '0 ', '0 ', '0 ', '0 ', '0 ']
 
         if ((x>=0) & (y>=0)):
@@ -215,10 +226,10 @@ def testPatternGenerator():
 
         f1.write(s)
 
-    f1.close()  
-    
+    f1.close()
 
-    
+
+
 
 if __name__ == "__main__":
     #trainingGenerator()
@@ -228,4 +239,5 @@ if __name__ == "__main__":
     #trainingSinGenerator()
     #trainingPatternGenerator()
     #testPatternGenerator()
-    trainingEquationGenerator()
+    #trainingEquationGenerator()
+    testEquationGenerator()

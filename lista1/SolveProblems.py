@@ -72,7 +72,7 @@ def solveXOR():
 		out = nn.forward(np.array(X_test[x]))
 
 		print("Prediceted : " + str( nn.predict(0.5, out[-1])))
-		print("Expected : " + str(Y_test[0][x])) 
+		print("Expected : " + str(Y_test[0][x]))
 		print("*****")
 		if(np.all(nn.predict(0.5, out[-1]) == Y_test[0][x])):
 			cnt += 1
@@ -112,7 +112,7 @@ def solveSine():
 
         print("Prediceted : " + str(out[len(out)-1]))
         print("Expected : " + str(Y_test[0][x]))
-        print("*****") 
+        print("*****")
 
     showGraph(X_test, Y_test[0], X_test, nn.forward(X_test)[-1])
 
@@ -157,11 +157,11 @@ def solvePatternRec():
 	#showGraph(X_test, Y_test[0], X_test, nn.forward(X_test)[-1])
 
 def solveEquation():
-    layer1 = NeuronLayer(20, 1)
-    layer2 = NeuronLayer(20, 20)
-    layer3 = NeuronLayer(1, 20)
+    layer1 = NeuronLayer(20, 1, "tanh")
+    layer2 = NeuronLayer(20, 20, "tanh")
+    layer3 = NeuronLayer(1, 20, "tanh")
 
-    nn = NeuralNet([layer1, layer2, layer3], 3, "tanh")
+    nn = NeuralNet([layer1, layer2, layer3], 3)
 
     print("1) Random weighs")
     nn.print_weights()
@@ -173,14 +173,14 @@ def solveEquation():
 
     #showGraph(input_data, output_data, input_data, nn.forward(input_data)[-1])
 
-    nn.batch_training(input_data, output_data, 10000, 0.00005)
+    nn.batch_training(input_data, output_data, 12000, 0.000001)
     #nn.stoc_training(input_data, output_data, 1000, 0.0001, 0)
 
     print("2) Weighs after training")
     nn.print_weights()
     showGraph(input_data, output_data, input_data, nn.forward(input_data)[-1])
 
-    
+
     X_test, Y_test = parseSinInput("TestEquation.txt")
 
     for x in range(len(X_test)):
@@ -188,10 +188,10 @@ def solveEquation():
 
         print("Prediceted : " + str(out[len(out)-1]))
         print("Expected : " + str(Y_test[0][x]))
-        print("*****") 
+        print("*****")
 
     showGraph(X_test, Y_test[0], X_test, nn.forward(X_test)[-1])
-	
+
 
 
 def showGraph(X1, Y1, X2, Y2):
@@ -204,5 +204,5 @@ if __name__ == "__main__":
 	#solveCube()
 	#solveXOR()
 	#solveSine()
-	solvePatternRec()
-	#solveEquation()
+	#solvePatternRec()
+	solveEquation()
