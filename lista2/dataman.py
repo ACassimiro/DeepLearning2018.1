@@ -7,6 +7,8 @@ from sklearn.model_selection import train_test_split
 from keras.datasets import mnist
 from keras.models import Sequential
 from keras.layers import Dense
+from keras.layers.normalization import BatchNormalization
+from keras.layers.core import Dense, Dropout, Activation
 
 
 #***********************************************
@@ -31,13 +33,17 @@ def parseTrainDataset(attributes, method, path):
 
 	#SUBSTITUIR INSTANCIAS EM STRING POR NUMERICAS
 	if "Sex" in attributes:
-		train["Sex"] = train["Sex"].str.replace("female", '0')#.astype('int')
-		train["Sex"] = train["Sex"].str.replace("male", '1')#.astype('int')
+		train = train.replace(["male", "female"], [0,1])
+
+	if "Embarked" in attributes:
+		train = train.replace(["S", "C", "Q"] , [0,1,2])
 	
 	#Evita que a coluna "Survived" seja apagada em caso de drop 
 	attributes.append("Survived")
 
 	train = train[attributes]
+
+	print(train)
 
 	#REMOVER TODAS AS INSTÂNCIAS ONDE NAN APARECE
 	if method == "dropAll":
@@ -78,11 +84,22 @@ def makeAndTrainNN(X_train, Y_train, inputNum):
 	model = Sequential()
 
 	#ADICIONA CAMADAS NA REDE
-	model.add(Dense(8, input_dim=inputNum, activation='sigmoid'))
-	model.add(Dense(12, activation='relu'))
-	model.add(Dense(6, activation='sigmoid'))
-	model.add(Dense(3, activation='relu'))
-	model.add(Dense(1, activation='sigmoid'))
+	model.add(Dense(30, input_dim=inputNum, kernel_initializer='uniform', activation='relu'))
+	#model.add(Dropout(0.4))
+	#model.add(BatchNormalization())
+	
+
+	model.add(Dense(16, kernel_initializer='uniform', activation='tanh'))
+	#model.add(Dropout(0.4))
+	#model.add(BatchNormalization())
+	
+	
+	model.add(Dense(8, kernel_initializer='uniform', activation='tanh'))
+	#model.add(Dropout(0.4))
+	#model.add(BatchNormalization())
+	
+	
+	model.add(Dense(1, kernel_initializer='uniform', activation='sigmoid'))
 
 	#Constroi a rede especificando método de treinamento, otimizador e metrica de progresso
 	model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
@@ -97,7 +114,7 @@ def makeAndTrainNN(X_train, Y_train, inputNum):
 if __name__ == "__main__":
 	np.random.seed(1)
 
-	attributes = ["Pclass", "Sex", "Age", "Fare"]
+	attributes = ["Pclass", "Sex", "Age", "SibSp", "Parch", "Fare", "Embarked"]
 	path = "dataset/train.csv"	
 
 	#METODO DE CORRECAO DO DATASET
