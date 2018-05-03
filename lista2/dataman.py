@@ -3,7 +3,7 @@ import tensorflow as tf
 import numpy as np
 import pandas as pd 
 import matplotlib.pyplot as plt
-from sklearn.model_selection import train_test_split
+from sklearn.model_selection import train_test_split, StratifiedKFold
 from keras.datasets import mnist
 from keras.models import Sequential
 from keras.layers import Dense
@@ -81,32 +81,46 @@ def parseTrainDataset(attributes, method, path):
 #    - Y_train: Expected output of the neural network
 #***********************************************
 def makeAndTrainNN(X_train, Y_train, inputNum):
-	model = Sequential()
+	seed = 7
+	np.random.seed(seed)
+	kfold = StratifiedKFold(n_splits=10, shuffle=True, random_state=seed)
+	print(kfold.split(X_train, Y_train))
+	print("**************\n\n\n\n")
+	cvscores = []
+	for trn, val in kfold.split(X_train, Y_train):
+		model = Sequential()
 
-	#ADICIONA CAMADAS NA REDE
-	model.add(Dense(30, input_dim=inputNum, kernel_initializer='uniform', activation='relu'))
-	#model.add(Dropout(0.4))
-	#model.add(BatchNormalization())
-	
+		#ADICIONA CAMADAS NA REDE
+		model.add(Dense(30, input_dim=inputNum, kernel_initializer='uniform', activation='relu'))
+		#model.add(Dropout(0.2))
+		#model.add(BatchNormalization())
+		
 
-	model.add(Dense(16, kernel_initializer='uniform', activation='tanh'))
-	#model.add(Dropout(0.4))
-	#model.add(BatchNormalization())
-	
-	
-	model.add(Dense(8, kernel_initializer='uniform', activation='tanh'))
-	#model.add(Dropout(0.4))
-	#model.add(BatchNormalization())
-	
-	
-	model.add(Dense(1, kernel_initializer='uniform', activation='sigmoid'))
+		model.add(Dense(16, kernel_initializer='uniform', activation='tanh'))
+		#model.add(Dropout(0.2))
+		#model.add(BatchNormalization())
+		
+		
+		model.add(Dense(8, kernel_initializer='uniform', activation='tanh'))
+		#model.add(Dropout(0.2))
+		#model.add(BatchNormalization())
+		
+		
+		model.add(Dense(1, kernel_initializer='uniform', activation='sigmoid'))
 
-	#Constroi a rede especificando método de treinamento, otimizador e metrica de progresso
-	model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
+		#Constroi a rede especificando método de treinamento, otimizador e metrica de progresso
+		model.compile(loss='binary_crossentropy', optimizer='adam', metrics=['accuracy'])
 
-	#Treina rede com base no X e Y dados
-	model.fit(X_train, Y_train, epochs=350, batch_size=15)
+		#Treina rede com base no X e Y dados
+		model.fit(X_train.loc[trn], Y_train.loc[trn], epochs=350, batch_size=15)
 
+		scores = model.evaluate(X_train.loc[val], Y_train.loc[val], verbose=0)
+
+		print("%s: %.2f%%" % (model.metrics_names[1], scores[1]*100))
+		cvscores.append(scores[1] * 100)
+
+
+	print("%.2f%% (+/- %.2f%%)" % (np.mean(cvscores), np.std(cvscores)))
 	return model
 
 #MAIN FUNCTION
