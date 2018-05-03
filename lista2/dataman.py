@@ -12,6 +12,94 @@ from keras.layers.core import Dense, Dropout, Activation
 
 
 #***********************************************
+# parseTestDataset
+#    - Parses the input dataset file, correcting 
+#    missing items according to the correction
+#    method. 
+# 
+#    - attributes: Attributes used for training
+#    - method: Correction method 
+#    - pathTest: Path to test file
+#    - pathDatabase: Path to database file
+#    - discard: Discard or not discard in case of 
+#      no match found
+#***********************************************
+
+def parseTestDataset(attributes, method, pathTest, pathDatabase, discard):
+	# Passo 1 - Leitura do dataset 
+	test = pd.read_csv(pathTest)
+	dataBase = pd.read_excel(pathDatabase, sheet_name="titanic3")
+
+	survivedList = []
+	indexList = []
+
+	#emptyDataFrame = 0
+	for i in range(len(test.index)):
+		auxRow = dataBase.loc[(dataBase['name'] == test['Name'][i]) & (dataBase['ticket'] == test['Ticket'][i])]
+		
+		if(auxRow.empty & (discard == 0)):
+			survivedList.append(0)
+			#emptyDataFrame += 1
+			#print()
+			#print(test.ix[i])
+		elif(auxRow.empty & (discard == 1)): 
+			indexList.append(i)
+			survivedList.append(0)
+		else:
+			survivedList.append(auxRow.iloc[0, 1])
+
+
+	survivedDF = pd.DataFrame({'Survived': survivedList})
+	test = test.join(survivedDF)
+	
+	if(discard == 1):
+		indexList = indexList[::-1]
+
+		for i in indexList:
+			test = test.drop(test.index[i])
+
+
+	#SUBSTITUIR INSTANCIAS EM STRING POR NUMERICAS
+	if "Sex" in attributes:
+		test = test.replace(["male", "female"], [0,1])
+
+	if "Embarked" in attributes:
+		test = test.replace(["S", "C", "Q"] , [0,1,2])
+	
+	#Evita que a coluna "Survived" seja apagada em caso de drop 
+	attributes.append("Survived")
+
+	test = test[attributes]
+
+	#REMOVER TODAS AS INSTÂNCIAS ONDE NAN APARECE
+	if method == "dropAll":
+		test = test.dropna(axis=0, how='any')
+	elif method == "fillZero":
+		test = test.fillna(0)
+	elif method == "correctAVG":
+		for attribute in attributes:
+			test[attribute] = test[attribute].fillna(test[attribute].mean())
+	elif method == "correctMode":
+		for attribute in attributes:
+			test[attribute] = test[attribute].fillna(test[attribute].mode())
+	elif method == "correctMedian":
+		for attribute in attributes:
+			test[attribute] = test[attribute].fillna(test[attribute].median())
+
+	#Remove "Survived" de attributes para que este não seja incluido no treinamento
+	attributes.remove("Survived")
+
+	X_test = test[attributes]
+	Y_test = test["Survived"]
+
+	return X_test, Y_test
+
+
+	return 0
+
+
+
+#***********************************************
 # parseTrainDataset
 #    - Parses the input dataset file, correcting 
 #    missing items according to the correction
@@ -129,7 +217,9 @@ if __name__ == "__main__":
 	np.random.seed(1)
 
 	attributes = ["Pclass", "Sex", "Age", "SibSp", "Parch", "Fare", "Embarked"]
-	path = "dataset/train.csv"	
+	pathTrain = "dataset/train.csv"	
+	pathTest = "dataset/teste.csv"
+	pathDatabase = "dataset/titanic3.xls"
 
 	#METODO DE CORRECAO DO DATASET
 	# dropAll - Deleta todas as linhas com um campo NaN
@@ -139,12 +229,15 @@ if __name__ == "__main__":
 	# correctMedian - Substitui NaN pela mediana
 	
 	#CORRECTMODE NAO FUNCIONA POR ALGUM MOTIVO
-	method = "correctAVG"
-
-	X_train, Y_train = parseTrainDataset(attributes, method, path)
+	method = "correctMedian"
+	
+	X_train, Y_train = parseTrainDataset(attributes, method, pathTrain)
+	
+	X_test, Y_test = parseTestDataset(attributes, method, pathTest, pathDatabase, 1)
 	
 	model = makeAndTrainNN(X_train, Y_train, len(attributes))
 
 	# evaluate the model
-	scores = model.evaluate(X_train, Y_train)
+	scores = model.evaluate(X_test, Y_test)
 	print("\n%s: %.2f%%" % (model.metrics_names[1], scores[1]*100))
+	
