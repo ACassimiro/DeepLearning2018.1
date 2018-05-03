@@ -28,23 +28,24 @@ model = Sequential()
 
 # Now, we flattens the input, and initiates our fully conected layers
 model.add(Flatten(input_shape=(28, 28, 1)))
+model.add(Activation("relu"))
 # To finish it, we add two fully conected layers separated, with 500 weights in the first,and then outputs.
 model.add(Dense(64, activation='relu'))
 model.add(Dense(10, activation='softmax'))
 
 # keras.optimizers.Adam(lr=0.001, beta_1=0.9, beta_2=0.999, epsilon=None, decay=0.0, amsgrad=False)
 
-#model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
-# results : [0.09477241398687475, 0.9719] 6 epochs
-# results : [0.17003534824103117, 0.9512] 1 epoch
+model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
+# results : [0.09802907322533429, 0.9725] 6 epochs
+# results : [0.1754212238833308, 0.9481] 1 epoch
 
-sgd = optimizers.SGD(lr=0.01, decay=0, momentum=0, nesterov=False)
-model.compile(loss='categorical_crossentropy', optimizer=sgd, metrics=['accuracy'])
+#sgd = optimizers.SGD(lr=0.01, decay=0, momentum=0, nesterov=False)
+#model.compile(loss='categorical_crossentropy', optimizer=sgd, metrics=['accuracy'])
 
-# results : [0.2080327854797244, 0.9409] 6 epochs
-# results : [0.3651481668591499, 0.8994] 1 epoch
+# results : [0.3716704800724983, 0.8983] 6 epochs
+# results : [0.37142099571228027, 0.8985] 1 epoch
 
-model.fit(x_train, y_train, batch_size=32, epochs=1, verbose=1 )
+model.fit(x_train, y_train, batch_size=32, epochs=6, verbose=1 )
 
 score = model.evaluate(x_test, y_test, verbose=0)
 

@@ -29,11 +29,11 @@ y_test = np_utils.to_categorical(y_test, 10)
 model = Sequential()
 
 # First convolutional layer, composed of 20 5x5 filters. The step is 1, with padding
-model.add(Conv2D(6, (5, 5), activation='relu', input_shape=( 28, 28, 1)))
+model.add(Conv2D(6, (5, 5), activation='relu', padding='same', input_shape=( 28, 28, 1)))
 # Pool Layer mask (2,2), 2,2 stride
 model.add(MaxPooling2D( pool_size=(2,2)))
 # Second convolutional layer, 50 5x5 filters
-model.add(Conv2D(16, (5, 5), activation='relu'))
+model.add(Conv2D(16, (5, 5), activation='relu', padding='same'))
 # Second Poo layer, just like the previous one
 model.add(MaxPooling2D( pool_size=(2,2)))
 
@@ -45,16 +45,16 @@ model.add(Dense(10, activation='softmax'))
 
 # keras.optimizers.Adam(lr=0.001, beta_1=0.9, beta_2=0.999, epsilon=None, decay=0.0, amsgrad=False)
 
-# model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
+model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
 
 # results : [0.03192821291965374, 0.9893] 6 epochs
 # results : [0.09339068892151117, 0.9697] 1 epoch
 
-sgd = optimizers.SGD(lr=0.01, decay=0, momentum=0, nesterov=False)
-model.compile(loss='categorical_crossentropy', optimizer=sgd, metrics=['accuracy'])
+#sgd = optimizers.SGD(lr=0.01, decay=0, momentum=0, nesterov=False)
+#model.compile(loss='categorical_crossentropy', optimizer=sgd, metrics=['accuracy'])
 
 # results : [0.05051871402286925, 0.9835] 6 epochs
-# result : [0.18092213546931743, 0.9445] 1 epoch
+# result : [0.1500920630902052, 0.9532] 1 epoch
 
 model.fit(x_train, y_train, batch_size=32, epochs=1, verbose=1 )
 
